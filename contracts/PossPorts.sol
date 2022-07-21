@@ -26,6 +26,15 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
     }
 
     /**
+    * FIXME: DELETE THIS BEFORE DEPLOYING ON MAINNET!
+    */
+    function mintBatch(address to, uint256[] calldata tokenIds, string[] calldata tokenURIs) external onlyOwner {
+        for (uint128 i = 0; i < tokenIds.length; i++) {
+            _mint(to, tokenIds[i], tokenURIs[i]);
+        }
+    }
+
+    /**
     * @dev Burn an old ERC1155 Possum on the OpenSea shared contract to
     * mint a new ERC721 Possum.
     */
