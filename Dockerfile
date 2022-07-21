@@ -15,10 +15,14 @@ RUN pip install -r requirements.txt
 WORKDIR /possums
 
 # install compiler before importing sources
-COPY scripts/install.py scripts/install.py
-RUN python3 scripts/install.py
+COPY install_compiler.py install_compiler.py
+RUN python3 install_compiler.py
 
-COPY lib lib
+# install npm dependencies
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+RUN npm install
+
 COPY brownie-config.yaml brownie-config.yaml
 COPY scripts scripts
 COPY contracts contracts
