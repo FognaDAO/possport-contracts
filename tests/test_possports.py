@@ -5,6 +5,11 @@ from scripts import deploy
 @fixture(scope="module", autouse=True)
 def deployment():
     oldToken, token = deploy.local()
+    # Migrate 5 tokens
+    oldTokenIds = list(map(lambda t: t.oldTokenId ,deploy.polygon["tokens"][:5]))
+    oldToken.setApprovalForAll(token, True, {"from": accounts[0]})
+    token.migrateBatch(oldTokenIds, [1] * 5, {"from": accounts[0]})
+    assert token.balanceOf(accounts[0]) == 5
     yield oldToken, token
 
 @fixture(autouse=True)

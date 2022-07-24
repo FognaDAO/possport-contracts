@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
 contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
 
+    uint128 constant N_POSSUMS = 50;
+
     struct Token {
         uint256 id;
         string tokenURI;
@@ -20,17 +22,15 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
 
     mapping(uint256 => Token) private oldTokenIdMap;
 
-    constructor(address _oldContract) ERC721("PossPorts", "POSSUM") {
-        oldContract = IERC1155(_oldContract);
-        oldTokenIdMap[10110860822564241239994147652924744222037427536707093556420917655177604890625] = Token(9, "");
-    }
+    constructor(
+        address _oldContract,
+        uint256[N_POSSUMS] memory oldTokenIds,
+        string[N_POSSUMS] memory tokenURIs
+    ) ERC721("PossPorts", "POSSUM") {
 
-    /**
-    * FIXME: DELETE THIS BEFORE DEPLOYING ON MAINNET!
-    */
-    function mintBatch(address to, uint256[] calldata tokenIds, string[] calldata tokenURIs) external onlyOwner {
-        for (uint128 i = 0; i < tokenIds.length; i++) {
-            _mint(to, tokenIds[i], tokenURIs[i]);
+        oldContract = IERC1155(_oldContract);
+        for (uint128 i = 0; i < N_POSSUMS; i++) {
+            oldTokenIdMap[oldTokenIds[i]] = Token(i + 1, tokenURIs[i]);
         }
     }
 
