@@ -1,0 +1,13 @@
+{
+  "name": "Slave To This Beauty",
+  "description": "Sewer Nation community ID\nPossPort #39\nPossum Name: SKIN\nI want to become their prized accessory.",
+  "image": "ipfs://bafybeif5x5agqm7elhsk7k4ebsq2lrhppjltlysb4dv4hj3ucfedu7ign4",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 7,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "I Dare You",
+  "description": "Sewer Nation community ID\nPossPort #22\nPossum Name: LOVE\nI leave the message to you.",
+  "image": "ipfs://bafybeifwol4eskjgpda6cyicifm7u7uung3bhyfmx6h657zbi6xuqqkr3e",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 7,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

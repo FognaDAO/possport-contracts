@@ -1,0 +1,13 @@
+{
+  "name": "Yours",
+  "description": "Sewer Nation community ID\nPossPort #13\nPossum Name: PRINCESS\nYours until I hate what you made of me.",
+  "image": "ipfs://bafybeihqsnkb7uht7msm4vsujwsp747wvors6tydnpr6acbfgrlgxpmq2i",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

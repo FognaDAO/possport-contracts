@@ -1,0 +1,13 @@
+{
+  "name": "Inertia",
+  "description": "Sewer Nation community ID\nPossPort #03\nPossum Name: LATE\nTomorrows aren't endelss.",
+  "image": "ipfs://bafybeia52lsjmlhltv6leuys4qiuqipzkncn653rf37bgyxufjm5wt7lgq",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

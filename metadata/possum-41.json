@@ -1,0 +1,13 @@
+{
+  "name": "No Matter The ETH",
+  "description": "Sewer Nation community ID\nPossPort #41\nPossum Name: WORTHLESS\nThe only thing that matters is YOU.",
+  "image": "ipfs://bafybeifm66lfvrim26hnekr37q4jr5vzzyxg2wjljux2zw5vv4q5gjjkei",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 7,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

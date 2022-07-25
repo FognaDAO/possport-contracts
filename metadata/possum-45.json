@@ -1,0 +1,13 @@
+{
+  "name": "Self-Determination",
+  "description": "Sewer Nation community ID\nPossPort #45\nPossum Name: ESCHER\nIt finds it's origin in the filthiest of places, the subconscious mind.",
+  "image": "ipfs://bafybeibwdah4u6ltjpbercyv3ymz2fey4w2sejhdy5gadnwcmjv66eqfa4",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 1,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

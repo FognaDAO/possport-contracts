@@ -1,0 +1,13 @@
+{
+  "name": "The Art Of Failure And Incompetence",
+  "description": "Sewer Nation community ID\nPossPort #48\nPossum Name: ROMA\nThere is a certain relaxing energy seeing a public bus burn.",
+  "image": "ipfs://bafybeiey7pkvdpyooqaxkxuy45bhn7ibcywtywbf3rvpaaisbe4sh5h75y",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 3,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

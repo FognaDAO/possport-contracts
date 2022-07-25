@@ -1,0 +1,13 @@
+{
+  "name": "The Origin Of Doubt",
+  "description": "Sewer Nation community ID\nPossPort #15\nPossum Name: MIND\nIt finds it's origin in the filthiest of places, the subconscious mind.",
+  "image": "ipfs://bafybeiax5e7vxc5kcmhwe6bxwgxtmvnj3yerqab5wucn2i44yr4yeuxlo4",
+  "properties": [
+    {
+      "trait_type": "Existential Dread ",
+      "value": 1,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

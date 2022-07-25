@@ -1,0 +1,13 @@
+{
+  "name": "Drowning",
+  "description": "Sewer Nation community ID\nPossPort #04\nPossum Name: RUM\nHard times require hard liquors.",
+  "image": "ipfs://bafybeidgigcviberfwu6zsqnu7cv7hxklwuboiqyshx4ss3suexeprca6u",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 6,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

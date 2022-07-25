@@ -1,0 +1,13 @@
+{
+  "name": "Ol\u00e8",
+  "description": "Sewer Nation community ID\nPossPort #34\nPossum Name: FLOW\nLearn to let it go till the day you die.",
+  "image": "ipfs://bafybeig3r7ud7rsytue4y6up2z43rewv6cdm736hfzwk2afhxa5do6iq3q",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 0,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

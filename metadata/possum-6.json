@@ -1,0 +1,13 @@
+{
+  "name": "Road Kill",
+  "description": "Sewer Nation community ID\nPossPort #06\nPossum Name: KARMA\nIt finds it's origin in the filthiest of places, the subconscious mind.",
+  "image": "ipfs://bafybeicatcajxqi2fcshtnekgq6a2d7zpys2dtxp5zuwuzrpplszvpsyw4",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 8,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

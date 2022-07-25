@@ -1,0 +1,13 @@
+{
+  "name": "Celebrate",
+  "description": "Sewer Nation community ID\nPossPort #46\nPossum Name: SANTA\nSewer Nation members are my faith, and with them I am glad to celebrate.",
+  "image": "ipfs://bafybeifgikrk4zlczeydi6fxzjpk5cvrco2ihx6qf35nciybebvr5gwhuq",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 1,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

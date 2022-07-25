@@ -1,0 +1,13 @@
+{
+  "name": "On The Shoulders Of Giants",
+  "description": "Sewer Nation community ID\nPossPort #40\nPossum Name: CHIEF\nWisdom of the past, insight of the future.",
+  "image": "ipfs://bafybeigwdnetceg5v55it5jfqzjwofozuxq7pngw3ulohepqilugw3plga",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 2,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

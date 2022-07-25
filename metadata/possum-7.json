@@ -1,0 +1,13 @@
+{
+  "name": "Self Destructive?",
+  "description": "Sewer Nation community ID\nPossPort #07\nPossum Name: TENAGLIA\nJust give me a reason.",
+  "image": "ipfs://bafybeidt5d3ouv6v5lykjthaxmye7gz7ucr6bqokwjlu4j2wnl4ex2qhce",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 7,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

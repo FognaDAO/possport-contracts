@@ -1,0 +1,13 @@
+{
+  "name": "Original Sin",
+  "description": "Sewer Nation community ID\nPossPort #01\nPossum Name: ADAM\nIt finds it's origin in the filthiest of places, the subconscious mind.",
+  "image": "ipfs://bafybeidxyeecseewv2m4ebn2f4chxv7y7qbidrgrdh6igfa6rvsxeuidie",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 3,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

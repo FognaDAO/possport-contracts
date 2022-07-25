@@ -1,0 +1,13 @@
+{
+  "name": "No Face No Case",
+  "description": "Sewer Nation community ID\nPossPort #49\nPossum Name: MASK\nHiding your identity in a state of centralized surveillance is an act of responsability towards your creativity.",
+  "image": "ipfs://bafybeid3r6dbzyv7thy5aqnioc4l5vuqgcxzmc3jrlgmpvh35343ndqo3u",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

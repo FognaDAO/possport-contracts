@@ -1,0 +1,13 @@
+{
+  "name": "Mother's Day",
+  "description": "Sewer Nation community ID\nPossPort #05\nPossum Name: MOM\nWe got the best prices in town.",
+  "image": "ipfs://bafybeigycdptg6cmp7bqw6xsyx7cyxh3xvyhusmkaduiggti6yipcnkp7m",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

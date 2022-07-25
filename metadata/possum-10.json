@@ -1,0 +1,13 @@
+{
+  "name": "Beautiful Pain",
+  "description": "Sewer Nation community ID\nPossPort #10\nPossum Name: THORNY\nEvery kiss comes with a stab in the gut.",
+  "image": "ipfs://bafybeigkiylovwa2daubwj6q2fzl7f4sgzka35oxaboy2g2lvmq7owo4gq",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

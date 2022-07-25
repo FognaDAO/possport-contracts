@@ -1,0 +1,13 @@
+{
+  "name": "The Promised Land",
+  "description": "Sewer Nation community ID\nPossPort #31\nPossum Name: LIBERTY\nAfter all there are no material solutions to our deepest problems.",
+  "image": "ipfs://bafybeiahna4ms4heeljmmt7ltfakr2w3izhomaw2bt5o5yaxrjoiagq44a",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 2,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

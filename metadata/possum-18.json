@@ -1,0 +1,13 @@
+{
+  "name": "Compromise",
+  "description": "Sewer Nation community ID\nPossPort #18\nPossum Name: SOCIETY\nDirection was found, but also limits.",
+  "image": "ipfs://bafybeieceehzhjihu6qgh6mrzkoj2p3u2tg2lt4voq73mwtqqxh5zkwv4m",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 6,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

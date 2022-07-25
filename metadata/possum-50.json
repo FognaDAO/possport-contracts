@@ -1,0 +1,13 @@
+{
+  "name": "Off They Go",
+  "description": "Sewer Nation community ID\nPossPort #50\nPossum Name: LOST\nI know nothing of their future, I can only have faith in my vermin children.",
+  "image": "ipfs://bafybeigctkkah4poljhkdinlkmfucsyyzi35asppbmaq5k723htqaax24i",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 6,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

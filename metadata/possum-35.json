@@ -1,0 +1,13 @@
+{
+  "name": "Second Thoughts",
+  "description": "Sewer Nation community ID\nPossPort #35\nPossum Name: BANKSY\nArt should comfort the disturbed and disturb the comfortable.",
+  "image": "ipfs://bafybeihrzfvdehuiwdpo2qxpczk7v57cwua6nkw65lhxtwip5vpqhmwryy",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 5,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Gen Z",
+  "description": "Sewer Nation community ID\nPossPort #08\nPossum Name: BOO & MER\nInfinite talent disconnected from the past.",
+  "image": "ipfs://bafybeibgxknow43ttpruv6slslrk5l4ejbx42ck3hhsz4sjaahlgw2yzse",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 6,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

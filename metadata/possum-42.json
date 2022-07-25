@@ -1,0 +1,13 @@
+{
+  "name": "NEO ROMA",
+  "description": "Sewer Nation community ID\nPossPort #42\nPossum Name: NEO\nReward for the giveaway treasure hunt during the 1st physical Sewer Nation event in Rome.",
+  "image": "ipfs://bafybeifdlyw5hew4xqqitatp4ixdrv5yiimlwg4vxshdqu5q4avstzfn2u",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

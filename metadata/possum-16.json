@@ -1,0 +1,13 @@
+{
+  "name": "Impostor Syndrome",
+  "description": "Sewer Nation community ID\nPossPort #16\nPossum Name: NFT TWINS\n90% of NFT projects will fail.",
+  "image": "ipfs://bafybeif6p7ptt4jxezf7umcfgnjhstrakz4utlrk2gyiyhfocms6lnttsq",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

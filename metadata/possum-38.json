@@ -1,0 +1,13 @@
+{
+  "name": "Decentralized Movida",
+  "description": "Sewer Nation community ID\nPossPort #38\nPossum Name: CIRCUS\nChallenge the norms of social gatherings.",
+  "image": "ipfs://bafybeiebdhapjfovdccdzakmt4452gpthyn2vqcwxu6lhvw7l3y62ao5j4",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 5,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

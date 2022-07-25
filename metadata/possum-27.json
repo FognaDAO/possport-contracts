@@ -1,0 +1,13 @@
+{
+  "name": "Outlasting Interest",
+  "description": "Sewer Nation community ID\nPossPort #27\nPossum Name: MARINA & ULAY\nWould you hold on forever?",
+  "image": "ipfs://bafybeiet2ych6fzvkmd7c5twp5ekkv726i2m7xybqo3tngwg3buhjmzy7m",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 6,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

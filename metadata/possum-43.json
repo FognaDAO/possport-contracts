@@ -1,0 +1,13 @@
+{
+  "name": "Defiance Of Danger",
+  "description": "Sewer Nation community ID\nPossPort #43\nPossum Name: FUEGO\nFind the strenght to push beyond your grave.",
+  "image": "ipfs://bafybeia6m5yimmpspol7j6ojmjq2efkzyaro47l5dcyrnolrlfu3wbrx7u",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 6,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

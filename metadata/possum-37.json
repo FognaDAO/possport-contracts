@@ -1,0 +1,13 @@
+{
+  "name": "Delusional Dreams",
+  "description": "Sewer Nation community ID\nPossPort #37\nPossum Name: TRASH\nThe icon of our era is a stuffed garbage bag.",
+  "image": "ipfs://bafybeignkgbp7dce6mcsazy33kbglodeyjszogjzxm5bt2wvqauq7wt4ia",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

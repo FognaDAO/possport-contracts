@@ -1,0 +1,13 @@
+{
+  "name": "I get why you smoke",
+  "description": "Sewer Nation community ID\nPossPort #11\nPossum Name: DRAGO\nNothings spells immortal like death paid in installments.",
+  "image": "ipfs://bafybeifecz2dqmsb5p2hsxt7hmqw3ujsbv4bwyw3qmw3icqlqumcypjwqe",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 2,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}

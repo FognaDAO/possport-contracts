@@ -1,0 +1,13 @@
+{
+  "name": "Attitudes to get you laid",
+  "description": "Sewer Nation community ID\nPossPort #09\nPossum Name: SMOKEM\nAs if you never bathed into your own delusions and disappointments just to cover yourself in a coat of damned poetry and wounded heroism.",
+  "image": "ipfs://bafybeidrzznx6omde5sn6kexoiqnsudwfrqzxkgnjvvf3uyt432rt66lly",
+  "properties": [
+    {
+      "trait_type": "Existential Dread",
+      "value": 4,
+      "display_type": "number",
+      "max_value": 10
+    }
+  ]
+}
