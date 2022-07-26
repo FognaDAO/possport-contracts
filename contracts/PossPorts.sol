@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: UNLICENSED
+
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -6,9 +8,10 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
+import "./meta-transactions/ContextMixin.sol";
+import "./meta-transactions/NativeMetaTransaction.sol";
 
-    uint128 constant N_POSSUMS = 50;
+contract PossPorts is ERC721URIStorage, ERC721Royalty, ContextMixin, NativeMetaTransaction, ERC1155Holder, Ownable {
 
     struct Token {
         uint256 id;
@@ -22,14 +25,24 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
 
     mapping(uint256 => Token) private oldTokenIdMap;
 
+    /**
+    * For Polygon mainnet use 0x58807baD0B376efc12F5AD86aAc70E78ed67deaE
+    * For Mumbai testnet use 0xff7Ca10aF37178BdD056628eF42fD7F799fAc77c
+    */
+    address private openseaProxy;
+
     constructor(
         address _oldContract,
-        uint256[N_POSSUMS] memory oldTokenIds,
-        string[N_POSSUMS] memory tokenURIs
+        address _openseaProxy,
+        uint256[] memory oldTokenIds,
+        string[] memory tokenURIs
     ) ERC721("PossPorts", "POSSUM") {
 
+        require(oldTokenIds.length == tokenURIs.length);
+        openseaProxy = _openseaProxy;
         oldContract = IERC1155(_oldContract);
-        for (uint128 i = 0; i < N_POSSUMS; i++) {
+
+        for (uint128 i = 0; i < oldTokenIds.length; i++) {
             oldTokenIdMap[oldTokenIds[i]] = Token(i + 1, tokenURIs[i]);
         }
     }
@@ -66,6 +79,17 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
     function burn(uint256 tokenId) external {
         require(_msgSender() == ownerOf(tokenId) || _msgSender() == getApproved(tokenId));
         _burn(tokenId);
+    }
+
+    /**
+     * @dev Override isApprovedForAll to auto-approve OpenSea's proxy contract.
+     */
+    function isApprovedForAll(address owner, address operator) public view virtual override returns (bool) {
+        // if OpenSea's ERC721 Proxy Address is detected, auto-return true
+        if (operator == openseaProxy) {
+            return true;
+        }
+        return super.isApprovedForAll(owner, operator);
     }
 
     /**
@@ -120,6 +144,14 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ERC1155Holder, Ownable {
     function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721Royalty) {
         ERC721URIStorage._burn(tokenId);
         _resetTokenRoyalty(tokenId);
+    }
+
+    /**
+     * @dev This is used instead of msg.sender as transactions might be
+     * sent by OpenSea instead of the original owner.
+     */
+    function _msgSender() internal view virtual override returns (address) {
+        return ContextMixin.msgSender();
     }
 
     /**
