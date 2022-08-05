@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "./meta-transactions/ContextMixin.sol";
 import "./meta-transactions/NativeMetaTransaction.sol";
 
-contract PossPorts is ERC721URIStorage, ERC721Royalty, ContextMixin, NativeMetaTransaction, ERC1155Holder, Ownable {
+contract PossPorts is ERC721URIStorage, ERC721Royalty, Ownable, ERC1155Holder, ContextMixin, NativeMetaTransaction {
 
     struct Token {
         uint256 id;
@@ -54,7 +54,7 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ContextMixin, NativeMetaT
     function migrate(uint256 oldTokenId) external {
         oldContract.safeTransferFrom(_msgSender(), address(this), oldTokenId, 1, "");
         Token memory newToken = oldTokenIdMap[oldTokenId];
-        require (newToken.id != 0);
+        require (newToken.id != 0, "invalid token id");
         _mint(_msgSender(), newToken.id, newToken.tokenURI);
     }
 
@@ -68,7 +68,7 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ContextMixin, NativeMetaT
         oldContract.safeBatchTransferFrom(_msgSender(), address(this), oldTokenIds, amounts, "");
         for (uint128 i = 0; i < oldTokenIds.length; i++) {
             Token memory newToken = oldTokenIdMap[oldTokenIds[i]];
-            require (newToken.id != 0);
+            require (newToken.id != 0, "invalid token id");
             _mint(_msgSender(), newToken.id, newToken.tokenURI);
         }
     }
@@ -77,7 +77,7 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, ContextMixin, NativeMetaT
     * @dev Burn tokens that sender owns or is approved for.
     */
     function burn(uint256 tokenId) external {
-        require(_msgSender() == ownerOf(tokenId) || _msgSender() == getApproved(tokenId));
+        require(_msgSender() == ownerOf(tokenId) || _msgSender() == getApproved(tokenId), "caller is not owner nor approved");
         _burn(tokenId);
     }
 
