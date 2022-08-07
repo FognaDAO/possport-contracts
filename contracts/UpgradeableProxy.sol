@@ -29,7 +29,7 @@ contract UpgradeableProxy is ERC1967Proxy {
         bytes memory data,
         bool forceCall
     ) external {
-        require(_getAdmin() == msg.sender);
+        require(_getAdmin() == msg.sender, "caller is not admin");
         _upgradeToAndCall(newImplementation, data, forceCall);
     }
 
@@ -37,7 +37,7 @@ contract UpgradeableProxy is ERC1967Proxy {
      * See {ERC1967Proxy-_changeAdmin}.
      */
     function changeAdmin(address newAdmin) external {
-        require(_getAdmin() == msg.sender);
+        require(_getAdmin() == msg.sender, "caller is not admin");
         _changeAdmin(newAdmin);
     }
 }
