@@ -51,6 +51,7 @@ contract PossPorts is
         address admin,
         address _oldContract,
         address _openseaProxy,
+        uint96 royalty,
         uint256[] calldata oldTokenIds,
         string[] calldata tokenURIs
     ) external initializer {
@@ -58,6 +59,7 @@ contract PossPorts is
         __ERC721_init("PossPorts", "POSSUM");
         _initializeEIP712("PossPorts");
         _transferOwnership(admin);
+        _setDefaultRoyalty(admin, royalty);
         baseURI = "ipfs://";
         openseaProxy = _openseaProxy;
         oldContract = IERC1155(_oldContract);
@@ -126,6 +128,34 @@ contract PossPorts is
         return ERC721RoyaltyUpgradeable.supportsInterface(interfaceId)
         || ERC721Upgradeable.supportsInterface(interfaceId)
         || ERC1155ReceiverUpgradeable.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @dev Admin can change default royalty information for all tokens.
+     */
+    function adminSetDefaultRoyalty(address receiver, uint96 feeNumerator) external onlyOwner {
+        _setDefaultRoyalty(receiver, feeNumerator);
+    }
+
+    /**
+     * @dev Admin can set the royalty information for a specific token.
+     */
+    function adminSetTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) external onlyOwner {
+        _setTokenRoyalty(tokenId, receiver, feeNumerator);
+    }
+
+    /**
+     * @dev Admin can remove default royalty information.
+     */
+    function adminDeleteDefaultRoyalty() external onlyOwner {
+        _deleteDefaultRoyalty();
+    }
+
+    /**
+     * @dev Admin can reset royalty information for a token back to the global default.
+     */
+    function adminResetTokenRoyalty(uint256 tokenId) external onlyOwner {
+        _resetTokenRoyalty(tokenId);
     }
 
     /**

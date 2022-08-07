@@ -36,6 +36,13 @@ def test_migrate_fail_if_not_token_owner(deployment):
     with brownie.reverts("ERC1155: caller is not token owner nor approved"):
         token.migrate(oldTokenId, {"from": accounts[1]})
 
+def test_set_default_royalty(deployment):
+    oldToken, token = deployment
+    tokenId = 1
+    assert token.royaltyInfo(tokenId, 100) == (accounts[0], 10)
+    token.adminSetDefaultRoyalty(accounts[1], 2000, {"from": accounts[0]})
+    assert token.royaltyInfo(tokenId, 100) == (accounts[1], 20)
+
 def test_burn(deployment):
     oldToken, token = deployment
     tokenId = 1
