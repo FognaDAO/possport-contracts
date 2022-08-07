@@ -7,7 +7,7 @@ TOKENS = environment.polygon["tokens"]
 
 @fixture(scope="module", autouse=True)
 def token():
-    proxy, token = deploy.poss_ports(accounts[0])
+    token = deploy.poss_ports(accounts[0])
     for t in TOKENS:
         token._mint(accounts[0], t.newTokenId, t.tokenURI, {"from": accounts[0]})
     return token

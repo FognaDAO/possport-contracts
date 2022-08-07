@@ -7,7 +7,7 @@ TOKENS = environment.polygon["tokens"]
 
 @fixture(scope="module", autouse=True)
 def deployment():
-    oldToken, proxy, token, migrator = deploy.local()
+    oldToken, token, migrator = deploy.local()
     oldToken.setApprovalForAll(migrator, True, {"from": accounts[0]})
     yield oldToken, token, migrator
 
