@@ -2,12 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
 
 import "./meta-transactions/ContextMixin.sol";
 import "./meta-transactions/NativeMetaTransaction.sol";
@@ -16,27 +13,19 @@ contract PossPorts is
     ERC721URIStorageUpgradeable,
     ERC721RoyaltyUpgradeable,
     OwnableUpgradeable,
-    ERC1155HolderUpgradeable,
     ContextMixin,
     NativeMetaTransaction {
 
-    struct Token {
-        uint256 id;
-        string tokenURI;
-    }
-
-    IERC1155 private oldContract;
-
     string private baseURI;
     string private baseEndURI;
-
-    mapping(uint256 => Token) private oldTokenIdMap;
 
     /**
     * For Polygon mainnet use 0x58807baD0B376efc12F5AD86aAc70E78ed67deaE
     * For Mumbai testnet use 0xff7Ca10aF37178BdD056628eF42fD7F799fAc77c
     */
-    address private openseaProxy;
+    address public openseaProxy;
+
+    address public minter;
 
     constructor() {
         // Prevents logic contract from being initialized
@@ -49,49 +38,17 @@ contract PossPorts is
      */
     function initialize(
         address admin,
-        address _oldContract,
+        address _minter,
         address _openseaProxy,
-        uint96 royalty,
-        uint256[] calldata oldTokenIds,
-        string[] calldata tokenURIs
+        uint96 royalty
     ) external initializer {
-        require(oldTokenIds.length == tokenURIs.length);
         __ERC721_init("PossPorts", "POSSUM");
         _initializeEIP712("PossPorts");
         _transferOwnership(admin);
         _setDefaultRoyalty(admin, royalty);
         baseURI = "ipfs://";
+        minter = _minter;
         openseaProxy = _openseaProxy;
-        oldContract = IERC1155(_oldContract);
-        for (uint128 i = 0; i < oldTokenIds.length; i++) {
-            oldTokenIdMap[oldTokenIds[i]] = Token(i + 1, tokenURIs[i]);
-        }
-    }
-
-    /**
-    * @dev Burn an old ERC1155 Possum on the OpenSea shared contract to
-    * mint a new ERC721 Possum.
-    */
-    function migrate(uint256 oldTokenId) external {
-        oldContract.safeTransferFrom(_msgSender(), address(this), oldTokenId, 1, "");
-        Token memory newToken = oldTokenIdMap[oldTokenId];
-        require (newToken.id != 0, "invalid token id");
-        _mint(_msgSender(), newToken.id, newToken.tokenURI);
-    }
-
-    /**
-    * @dev Gas optimized method to migrate multiple tokens at once.
-    * `amounts` must always be an array of the same size of `oldTokenIds`, all filled with `1`.
-    * If it has a different value this function will fail or not transfer all the tokens.
-    * Client is required to pre-compute this value in order to save gas.
-    */
-    function migrateBatch(uint256[] calldata oldTokenIds, uint256[] calldata amounts) external {
-        oldContract.safeBatchTransferFrom(_msgSender(), address(this), oldTokenIds, amounts, "");
-        for (uint128 i = 0; i < oldTokenIds.length; i++) {
-            Token memory newToken = oldTokenIdMap[oldTokenIds[i]];
-            require (newToken.id != 0, "invalid token id");
-            _mint(_msgSender(), newToken.id, newToken.tokenURI);
-        }
     }
 
     /**
@@ -124,10 +81,9 @@ contract PossPorts is
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721RoyaltyUpgradeable, ERC1155ReceiverUpgradeable, ERC721Upgradeable) returns (bool) {
-        return ERC721RoyaltyUpgradeable.supportsInterface(interfaceId)
-        || ERC721Upgradeable.supportsInterface(interfaceId)
-        || ERC1155ReceiverUpgradeable.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721RoyaltyUpgradeable, ERC721Upgradeable) returns (bool) {
+        return ERC721RoyaltyUpgradeable.supportsInterface(interfaceId) ||
+            ERC721Upgradeable.supportsInterface(interfaceId);
     }
 
     /**
@@ -180,9 +136,10 @@ contract PossPorts is
     }
 
     /**
-     * @dev See {ERC721-_mint}.
+     * @dev Only minter is able to mint new tokens.
      */
-    function _mint(address to, uint256 tokenId, string memory _tokenURI) internal {
+    function _mint(address to, uint256 tokenId, string memory _tokenURI) external {
+        require (_msgSender() == minter);
         _mint(to, tokenId);
         _setTokenURI(tokenId, _tokenURI);
     }

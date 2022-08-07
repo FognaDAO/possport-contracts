@@ -16,23 +16,15 @@ contract PossPortsUpgrade is
     ERC721URIStorageUpgradeable,
     ERC721RoyaltyUpgradeable,
     OwnableUpgradeable,
-    ERC1155HolderUpgradeable,
     ContextMixin,
     NativeMetaTransaction {
-
-    struct Token {
-        uint256 id;
-        string tokenURI;
-    }
-
-    uint256 public replaced;
 
     string public baseURI;
     string public baseEndURI;
 
-    mapping(uint256 => Token) public oldTokenIdMap;
-
     address public openseaProxy;
+
+    uint256 public replaced;
 
     uint256 public newValue;
 
@@ -49,7 +41,7 @@ contract PossPortsUpgrade is
         ERC721URIStorageUpgradeable._burn(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721RoyaltyUpgradeable, ERC1155ReceiverUpgradeable, ERC721Upgradeable) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721RoyaltyUpgradeable, ERC721Upgradeable) returns (bool) {
         return ERC721Upgradeable.supportsInterface(interfaceId);
     }
 }

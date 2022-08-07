@@ -7,12 +7,9 @@ TOKENS = environment.polygon["tokens"]
 
 @fixture(scope="module", autouse=True)
 def deployment():
-    oldToken, proxy, token = deploy.local()
-    # Migrate all tokens
-    oldTokenIds = list(map(lambda t: t.oldTokenId, TOKENS))
-    oldToken.setApprovalForAll(token, True, {"from": accounts[0]})
-    token.migrateBatch(oldTokenIds, [1] * len(TOKENS), {"from": accounts[0]})
-    assert token.balanceOf(accounts[0]) == len(TOKENS)
+    proxy, token = deploy.poss_ports(accounts[0])
+    for t in TOKENS:
+        token._mint(accounts[0], t.newTokenId, t.tokenURI, {"from": accounts[0]})
     # Deploy new logic contract for testing
     new_logic = PossPortsUpgrade.deploy({"from": accounts[0]})
     yield new_logic, proxy
