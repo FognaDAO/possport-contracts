@@ -161,22 +161,22 @@ contract PossPorts is
     /**
      * @dev Admin can change token URI.
      */
-    function adminSetTokenURI(uint256 tokenId, string calldata _tokenURI) external onlyOwner {
-        _setTokenURI(tokenId, _tokenURI);
+    function adminSetTokenURI(uint256 tokenId, string calldata newTokenURI) external onlyOwner {
+        _setTokenURI(tokenId, newTokenURI);
     }
 
     /**
      * @dev Admin can change base URI.
      */
-    function adminSetBaseURI(string calldata baseURI_) external onlyOwner {
-        baseURI = baseURI_;
+    function adminSetBaseURI(string calldata newBaseURI) external onlyOwner {
+        baseURI = newBaseURI;
     }
 
     /**
      * @dev Admin can change base end URI.
      */
-    function adminSetBaseEndURI(string calldata baseEndURI_) external onlyOwner {
-        baseEndURI = baseEndURI_;
+    function adminSetBaseEndURI(string calldata newBaseEndURI) external onlyOwner {
+        baseEndURI = newBaseEndURI;
     }
 
     /**
