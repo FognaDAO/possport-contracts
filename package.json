@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "PossPorts ERC721 collection",
   "scripts": {
-    "start": "echo \"Use brownie, not npm!"
+    "start": "echo 'Use brownie, not npm!'"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "url": "https://gitlab.com/sewer-nation/possums/issues"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.0"
+    "@openzeppelin/contracts": "^4.7.2",
+    "@openzeppelin/contracts-upgradeable": "^4.7.2"
   }
 }

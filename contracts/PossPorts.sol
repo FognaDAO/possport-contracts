@@ -2,16 +2,23 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
 
 import "./meta-transactions/ContextMixin.sol";
 import "./meta-transactions/NativeMetaTransaction.sol";
 
-contract PossPorts is ERC721URIStorage, ERC721Royalty, Ownable, ERC1155Holder, ContextMixin, NativeMetaTransaction {
+contract PossPorts is
+    ERC721URIStorageUpgradeable,
+    ERC721RoyaltyUpgradeable,
+    OwnableUpgradeable,
+    ERC1155HolderUpgradeable,
+    ContextMixin,
+    NativeMetaTransaction {
 
     struct Token {
         uint256 id;
@@ -20,7 +27,7 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, Ownable, ERC1155Holder, C
 
     IERC1155 private oldContract;
 
-    string private baseURI = "ipfs://";
+    string private baseURI;
     string private baseEndURI;
 
     mapping(uint256 => Token) private oldTokenIdMap;
@@ -31,17 +38,29 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, Ownable, ERC1155Holder, C
     */
     address private openseaProxy;
 
-    constructor(
+    constructor() {
+        // Prevents logic contract from being initialized
+        _disableInitializers();
+    }
+
+    /**
+    * This can only be called once.
+    * Should be called in the proxy contract right after instantiation.
+     */
+    function initialize(
+        address admin,
         address _oldContract,
         address _openseaProxy,
-        uint256[] memory oldTokenIds,
-        string[] memory tokenURIs
-    ) ERC721("PossPorts", "POSSUM") {
-
+        uint256[] calldata oldTokenIds,
+        string[] calldata tokenURIs
+    ) external initializer {
         require(oldTokenIds.length == tokenURIs.length);
+        __ERC721_init("PossPorts", "POSSUM");
+        _initializeEIP712("PossPorts");
+        _transferOwnership(admin);
+        baseURI = "ipfs://";
         openseaProxy = _openseaProxy;
         oldContract = IERC1155(_oldContract);
-
         for (uint128 i = 0; i < oldTokenIds.length; i++) {
             oldTokenIdMap[oldTokenIds[i]] = Token(i + 1, tokenURIs[i]);
         }
@@ -95,18 +114,18 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, Ownable, ERC1155Holder, C
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-     function tokenURI(uint256 tokenId) public view override(ERC721URIStorage, ERC721) returns (string memory) {
-        string memory uri = ERC721URIStorage.tokenURI(tokenId);
+     function tokenURI(uint256 tokenId) public view override(ERC721URIStorageUpgradeable, ERC721Upgradeable) returns (string memory) {
+        string memory uri = ERC721URIStorageUpgradeable.tokenURI(tokenId);
         return bytes(baseEndURI).length == 0 ? uri : string(abi.encodePacked(uri, baseEndURI));
     }
 
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721Royalty, ERC1155Receiver, ERC721) returns (bool) {
-        return ERC721Royalty.supportsInterface(interfaceId)
-        || ERC721.supportsInterface(interfaceId)
-        || ERC1155Receiver.supportsInterface(interfaceId);
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721RoyaltyUpgradeable, ERC1155ReceiverUpgradeable, ERC721Upgradeable) returns (bool) {
+        return ERC721RoyaltyUpgradeable.supportsInterface(interfaceId)
+        || ERC721Upgradeable.supportsInterface(interfaceId)
+        || ERC1155ReceiverUpgradeable.supportsInterface(interfaceId);
     }
 
     /**
@@ -141,8 +160,8 @@ contract PossPorts is ERC721URIStorage, ERC721Royalty, Ownable, ERC1155Holder, C
     /**
      * @dev See {ERC721-_burn}.
      */
-    function _burn(uint256 tokenId) internal override(ERC721URIStorage, ERC721Royalty) {
-        ERC721URIStorage._burn(tokenId);
+    function _burn(uint256 tokenId) internal override(ERC721URIStorageUpgradeable, ERC721RoyaltyUpgradeable) {
+        ERC721URIStorageUpgradeable._burn(tokenId);
         _resetTokenRoyalty(tokenId);
     }
 

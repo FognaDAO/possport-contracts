@@ -5,7 +5,7 @@ from scripts import deploy, environment
 
 @fixture(scope="module", autouse=True)
 def deployment():
-    oldToken, token = deploy.local()
+    oldToken, proxy, token = deploy.local()
     # Migrate 5 tokens
     oldTokenIds = list(map(lambda t: t.oldTokenId, environment.polygon["tokens"][:5]))
     oldToken.setApprovalForAll(token, True, {"from": accounts[0]})
