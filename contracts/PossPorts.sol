@@ -60,6 +60,17 @@ contract PossPorts is
     }
 
     /**
+     * @dev Batched version of of {IERC721-ownerOf}
+     */
+     function ownerOfBatch(uint256[] calldata tokenIds) external view returns (address[] memory) {
+        address[] memory owners = new address[](tokenIds.length);
+        for(uint256 i = 0; i < tokenIds.length; ++i) {
+            owners[i] = ownerOf(tokenIds[i]);
+        }
+        return owners;
+    }
+
+    /**
      * @dev Override isApprovedForAll to auto-approve OpenSea's proxy contract.
      */
     function isApprovedForAll(address owner, address operator) public view virtual override returns (bool) {

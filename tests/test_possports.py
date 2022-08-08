@@ -46,6 +46,10 @@ def test_token_uri_updates(token):
     token.adminSetBaseEndURI("/end", {"from": accounts[0]})
     assert token.tokenURI(tokenId) == "http://" + token_uri + "/end"
 
+def test_owner_of_batch(token):
+    token.transferFrom(accounts[0], accounts[1], 2, {"from": accounts[0]})
+    assert token.ownerOfBatch([1, 2, 3]) == [accounts[0], accounts[1], accounts[0]]
+
 def test_supports_interface(token):
     assert not token.supportsInterface("0x00000000")
     assert token.supportsInterface("0x80ac58cd") # ERC-721
