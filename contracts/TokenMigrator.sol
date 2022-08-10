@@ -5,12 +5,12 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 
+interface ERC1155Burnable is IERC1155 {
+    function burn(address from, uint256 id, uint256 quantity) external;
+}
+
 interface NewToken {
-    function _mint(
-        address to,
-        uint256 tokenId,
-        string memory _tokenURI
-    ) external;
+    function _mint(address to, uint256 tokenId, string memory _tokenURI) external;
 }
 
 contract TokenMigrator is ERC1155Holder {
@@ -22,7 +22,7 @@ contract TokenMigrator is ERC1155Holder {
 
     mapping(uint256 => Token) private oldTokenIdMap;
 
-    IERC1155 public oldToken;
+    ERC1155Burnable public oldToken;
     NewToken public newToken;
 
     constructor(
@@ -32,7 +32,7 @@ contract TokenMigrator is ERC1155Holder {
         string[] memory tokenURIs
     ) {
         require(oldTokenIds.length == tokenURIs.length);
-        oldToken = IERC1155(_oldToken);
+        oldToken = ERC1155Burnable(_oldToken);
         newToken = NewToken(_newToken);
         for (uint128 i = 0; i < oldTokenIds.length; i++) {
             oldTokenIdMap[oldTokenIds[i]] = Token(i + 1, tokenURIs[i]);
@@ -44,7 +44,9 @@ contract TokenMigrator is ERC1155Holder {
     * mint a new ERC721 Possum.
     */
     function migrate(uint256 oldTokenId) external {
+        // On OpenSea contract a token is burnable only from its owner
         oldToken.safeTransferFrom(msg.sender, address(this), oldTokenId, 1, "");
+        oldToken.burn(address(this), oldTokenId, 1);
         Token memory token = oldTokenIdMap[oldTokenId];
         require (token.id != 0, "invalid token id");
         newToken._mint(msg.sender, token.id, token.tokenURI);
@@ -59,6 +61,7 @@ contract TokenMigrator is ERC1155Holder {
     function migrateBatch(uint256[] calldata oldTokenIds, uint256[] calldata amounts) external {
         oldToken.safeBatchTransferFrom(msg.sender, address(this), oldTokenIds, amounts, "");
         for (uint128 i = 0; i < oldTokenIds.length; i++) {
+            oldToken.burn(address(this), oldTokenIds[i], 1);
             Token memory token = oldTokenIdMap[oldTokenIds[i]];
             require (token.id != 0, "invalid token id");
             newToken._mint(msg.sender, token.id, token.tokenURI);

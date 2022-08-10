@@ -9,15 +9,20 @@ contract FakeToken is ERC1155, Ownable {
 
     constructor() ERC1155("https://game.example/api/item/{id}.json") {}
 
-    function mint(address _to, uint256 _id, uint256 _amount) public onlyOwner {
-        _mint(_to, _id, _amount, "");
+    function burn(address from, uint256 id, uint256 quantity) external {
+        require (balanceOf(_msgSender(), id) >= quantity);
+        _burn(from, id, quantity);
+    }
+
+    function mint(address to, uint256 id, uint256 amount) public onlyOwner {
+        _mint(to, id, amount, "");
     }
 
     function mintBatch(
-        address _to,
-        uint256[] calldata _ids,
-        uint256[] calldata _amounts
+        address to,
+        uint256[] calldata ids,
+        uint256[] calldata amounts
     ) public onlyOwner {
-        _mintBatch(_to, _ids, _amounts, "");
+        _mintBatch(to, ids, amounts, "");
     }
 }
