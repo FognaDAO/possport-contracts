@@ -3,13 +3,13 @@ from pytest import fixture
 from scripts import deploy, environment
 from brownie import PossPortsUpgrade, Contract, accounts
 
-TOKENS = environment.polygon["tokens"]
+env = environment.local
 
 @fixture(scope="module", autouse=True)
 def deployment():
-    token = deploy.poss_ports(accounts[0])
-    for t in TOKENS:
-        token._mint(accounts[0], t.newTokenId, t.tokenURI, {"from": accounts[0]})
+    token = deploy.poss_ports(accounts[0], accounts[0], env.opensea_proxy, accounts[0])
+    for t in env.tokens:
+        token._mint(accounts[0], t.new_token_id, t.uri, {"from": accounts[0]})
     # Deploy new logic contract for testing
     new_logic = PossPortsUpgrade.deploy({"from": accounts[0]})
     yield new_logic, token
