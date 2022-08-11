@@ -19,7 +19,7 @@ def _deploy(env, admin, upgrade_admin):
         print("Using old ERC1155 token at %s", env.old_token)
         oldToken = FakeToken.at(env.old_token)
     else:
-        print("No old token specified. Deploying a dummy ERC1155")
+        print("No old token specified. Deploying a dummy ERC1155...")
         oldToken = fake_old_token(old_token_ids)
     token, migrator = token_with_migrator(
         oldToken,
@@ -44,6 +44,7 @@ def token_with_migrator(
     assert len(old_token_ids) == len(token_uris)
     migrator_address = accounts[0].get_deployment_address()
     token_address = accounts[0].get_deployment_address(accounts[0].nonce + 2)
+    print("Deploying TokenMigrator contract...")
     migrator = TokenMigrator.deploy(
         old_token,
         token_address,
@@ -57,9 +58,11 @@ def token_with_migrator(
 
 def poss_ports(admin, minter, opensea_proxy, upgrade_admin, publish=False):
     # Deploy logic contract
+    print("Deploying PossPorts contract...")
     logic = PossPorts.deploy({"from": accounts[0]}, publish_source=publish)
     # Deploy and initialize proxy contract
     initialize_call = logic.initialize.encode_input(admin, minter, opensea_proxy, DEFAULT_ROYALTY)
+    print("Deploying UpgradeableProxy contract...")
     proxy = UpgradeableProxy.deploy(
         upgrade_admin,
         logic,
