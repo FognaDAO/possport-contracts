@@ -4,15 +4,15 @@ from scripts import environment
 DEFAULT_ROYALTY = 1000
 
 def local():
-    return _deploy(environment.local)
+    return _deploy(environment.local, accounts[0], accounts[0])
 
 def polygon():
-    return _deploy(environment.polygon)
+    return _deploy(environment.polygon, accounts[0], accounts[0])
 
 def mumbai_testnet():
-    return _deploy(environment.mumbai)
+    return _deploy(environment.mumbai, accounts[0], accounts[0])
 
-def _deploy(env):
+def _deploy(env, admin, upgrade_admin):
     old_token_ids = list(map(lambda t: t.old_token_id, env.tokens))
     token_uris = list(map(lambda t: t.uri, env.tokens))
     if (env.old_token):
@@ -21,23 +21,52 @@ def _deploy(env):
     else:
         print("No old token specified. Deploying a dummy ERC1155")
         oldToken = fake_old_token(old_token_ids)
-    token, migrator = token_with_migrator(oldToken, old_token_ids, token_uris, accounts[0], env.opensea_proxy, accounts[0])
+    token, migrator = token_with_migrator(
+        oldToken,
+        old_token_ids,
+        token_uris,
+        admin,
+        env.opensea_proxy,
+        upgrade_admin,
+        env.publish_source
+    )
     return oldToken, token, migrator
 
-def token_with_migrator(old_token, old_token_ids, token_uris, admin, opensea_proxy, upgrade_admin):
+def token_with_migrator(
+    old_token,
+    old_token_ids,
+    token_uris,
+    admin,
+    opensea_proxy,
+    upgrade_admin,
+    publish=False
+):
     assert len(old_token_ids) == len(token_uris)
     migrator_address = accounts[0].get_deployment_address()
     token_address = accounts[0].get_deployment_address(accounts[0].nonce + 2)
-    migrator = TokenMigrator.deploy(old_token, token_address, old_token_ids, token_uris, {"from": accounts[0]})
-    token = poss_ports(admin, migrator_address, opensea_proxy, upgrade_admin)
+    migrator = TokenMigrator.deploy(
+        old_token,
+        token_address,
+        old_token_ids,
+        token_uris,
+        {"from": accounts[0]},
+        publish_source=publish
+    )
+    token = poss_ports(admin, migrator_address, opensea_proxy, upgrade_admin, publish)
     return token, migrator
 
-def poss_ports(admin, minter, opensea_proxy, upgrade_admin):
+def poss_ports(admin, minter, opensea_proxy, upgrade_admin, publish=False):
     # Deploy logic contract
-    logic = PossPorts.deploy({"from": accounts[0]})
+    logic = PossPorts.deploy({"from": accounts[0]}, publish_source=publish)
     # Deploy and initialize proxy contract
     initialize_call = logic.initialize.encode_input(admin, minter, opensea_proxy, DEFAULT_ROYALTY)
-    proxy = UpgradeableProxy.deploy(upgrade_admin, logic, initialize_call, {"from": accounts[0]})
+    proxy = UpgradeableProxy.deploy(
+        upgrade_admin,
+        logic,
+        initialize_call,
+        {"from": accounts[0]},
+        publish_source=publish
+    )
     token = Contract.from_abi("PossPorts", proxy.address, PossPorts.abi + UpgradeableProxy.abi)
     return token
 
