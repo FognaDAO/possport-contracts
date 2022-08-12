@@ -1,4 +1,9 @@
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@4.7.3
+  - OpenZeppelin/openzeppelin-contracts-upgradeable@4.7.3
+
 compiler:
-    solc:
-        remappings:
-          - "@openzeppelin=./node_modules/@openzeppelin"
+  solc:
+    remappings:
+      - '@openzeppelin/contracts=OpenZeppelin/openzeppelin-contracts@4.7.3/contracts'
+      - '@openzeppelin/contracts-upgradeable=OpenZeppelin/openzeppelin-contracts-upgradeable@4.7.3/contracts'

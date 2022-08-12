@@ -1,5 +1,6 @@
 # vscode stuff
 .vscode
+remappings.txt
 
 # npm stuff
 node_modules
