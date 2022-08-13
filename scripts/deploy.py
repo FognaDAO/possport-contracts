@@ -12,7 +12,7 @@ def polygon():
 def mumbai_testnet():
     return _deploy(environment.mumbai, accounts[0], accounts[0])
 
-def _deploy(env, admin, upgrade_admin):
+def _deploy(env, admin, upgrade_admin, publish=False):
     old_token_ids = list(map(lambda t: t.old_token_id, env.tokens))
     token_uris = list(map(lambda t: t.uri, env.tokens))
     if (env.old_token):
@@ -20,7 +20,7 @@ def _deploy(env, admin, upgrade_admin):
         oldToken = FakeToken.at(env.old_token)
     else:
         print("No old token specified. Deploying a dummy ERC1155...")
-        oldToken = fake_old_token(old_token_ids)
+        oldToken = fake_old_token(old_token_ids, publish)
     token, migrator = token_with_migrator(
         oldToken,
         old_token_ids,
@@ -28,7 +28,7 @@ def _deploy(env, admin, upgrade_admin):
         admin,
         env.opensea_proxy,
         upgrade_admin,
-        env.publish_source
+        publish
     )
     return oldToken, token, migrator
 
@@ -73,8 +73,8 @@ def poss_ports(admin, minter, opensea_proxy, upgrade_admin, publish=False):
     token = Contract.from_abi("PossPorts", proxy.address, PossPorts.abi + UpgradeableProxy.abi)
     return token
 
-def fake_old_token(tokenIds):
-    oldToken = FakeToken.deploy({"from": accounts[0]})
+def fake_old_token(tokenIds, publish=False):
+    oldToken = FakeToken.deploy({"from": accounts[0]}, publish_source=publish)
     oldToken.mintBatch(accounts[0], tokenIds, [1] * len(tokenIds))
     assert oldToken.balanceOf(accounts[0], tokenIds[0]) == 1
     return oldToken

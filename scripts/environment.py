@@ -5,16 +5,14 @@ class Token:
         self.uri = uri
 
 class Environment:
-    def __init__(self, old_token, opensea_proxy, publish_source, tokens):
+    def __init__(self, old_token, opensea_proxy, tokens):
         self.old_token = old_token
         self.opensea_proxy = opensea_proxy
-        self.publish_source = publish_source
         self.tokens = tokens
 
 polygon = Environment(
     old_token = "0x2953399124f0cbb46d2cbacd8a89cf0599974963",
     opensea_proxy = "0x58807baD0B376efc12F5AD86aAc70E78ed67deaE",
-    publish_source = True,
     tokens = [
         Token(1, 10110860822564241239994147652924744222037427536707093556420917645282000240641, "QmPnKZpXa7ypDWp8XEfsnZbCzhS5JC98S48pjtGXdb6Jb3"),
         Token(2, 10110860822564241239994147652924744222037427536707093556420917646381511868417, "QmceoBMszAMRp5neibqxsy3AXBcetFmoV81uC6gjxchXQv"),
@@ -72,7 +70,6 @@ polygon = Environment(
 mumbai = Environment(
     old_token = "0x2953399124f0cbb46d2cbacd8a89cf0599974963",
     opensea_proxy = "0x58807baD0B376efc12F5AD86aAc70E78ed67deaE",
-    publish_source = True,
     tokens = [
         Token(1, 110058511683499541956638115260030752419186088947549686925221671937348632313857, "QmPnKZpXa7ypDWp8XEfsnZbCzhS5JC98S48pjtGXdb6Jb3"),
         Token(2, 110058511683499541956638115260030752419186088947549686925221671938448143941633, "QmceoBMszAMRp5neibqxsy3AXBcetFmoV81uC6gjxchXQv"),
@@ -90,6 +87,5 @@ mumbai = Environment(
 local = Environment(
     old_token = None,
     opensea_proxy = polygon.opensea_proxy,
-    publish_source = False,
     tokens = polygon.tokens
 )
