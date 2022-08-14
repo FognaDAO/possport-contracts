@@ -3,26 +3,34 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
-
-interface ERC1155Burnable is IERC1155 {
-    function burn(address from, uint256 id, uint256 quantity) external;
-}
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Receiver.sol";
 
 interface NewToken {
-    function _mint(address to, uint256 tokenId, string memory _tokenURI) external;
+    function _mint(address to, uint256 tokenId, string memory tokenURI) external;
 }
 
-contract TokenMigrator is ERC1155Holder {
+contract TokenMigrator is ERC1155Receiver {
 
     struct Token {
         uint256 id;
         string tokenURI;
     }
 
+    address constant BURN_ADDRESS = 0x000000000000000000000000000000000000dEaD;
+
+    /**
+    * @dev Map ids on the old token contract to tokens in the new contract
+    */
     mapping(uint256 => Token) private oldTokenIdMap;
 
-    ERC1155Burnable public oldToken;
+    /**
+    * @dev OpenSea shared token contract
+    */
+    IERC1155 public oldToken;
+
+    /**
+    * @dev New token contract
+    */
     NewToken public newToken;
 
     constructor(
@@ -32,39 +40,52 @@ contract TokenMigrator is ERC1155Holder {
         string[] memory tokenURIs
     ) {
         require(oldTokenIds.length == tokenURIs.length);
-        oldToken = ERC1155Burnable(_oldToken);
+        oldToken = IERC1155(_oldToken);
         newToken = NewToken(_newToken);
-        for (uint128 i = 0; i < oldTokenIds.length; i++) {
+        for (uint256 i = 0; i < oldTokenIds.length; i++) {
             oldTokenIdMap[oldTokenIds[i]] = Token(i + 1, tokenURIs[i]);
         }
     }
 
     /**
-    * @dev Burn an old ERC1155 Possum on the OpenSea shared contract to
+    * @dev Burn received old ERC1155 Possum on the OpenSea shared contract to
     * mint a new ERC721 Possum.
     */
-    function migrate(uint256 oldTokenId) external {
-        // On OpenSea contract a token is burnable only from its owner
-        oldToken.safeTransferFrom(msg.sender, address(this), oldTokenId, 1, "");
-        oldToken.burn(address(this), oldTokenId, 1);
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 oldTokenId,
+        uint256 value,
+        bytes calldata data
+    ) external override returns (bytes4) {
+        require (msg.sender == address(oldToken), "invalid token contract");
+        require (value == 1);
         Token memory token = oldTokenIdMap[oldTokenId];
         require (token.id != 0, "invalid token id");
-        newToken._mint(msg.sender, token.id, token.tokenURI);
+        newToken._mint(operator, token.id, token.tokenURI);
+        oldToken.safeTransferFrom(address(this), BURN_ADDRESS, oldTokenId, 1, "");
+        return this.onERC1155Received.selector;
     }
 
     /**
-    * @dev Gas optimized method to migrate multiple tokens at once.
-    * `amounts` must always be an array of the same size of `oldTokenIds`, all filled with `1`.
-    * If it has a different value this function will fail or not transfer all the tokens.
-    * Client is required to pre-compute this value in order to save gas.
+    * @dev Burn received old ERC1155 Possums on the OpenSea shared contract to
+    * mint new ERC721 Possums.
     */
-    function migrateBatch(uint256[] calldata oldTokenIds, uint256[] calldata amounts) external {
-        oldToken.safeBatchTransferFrom(msg.sender, address(this), oldTokenIds, amounts, "");
-        for (uint128 i = 0; i < oldTokenIds.length; i++) {
-            oldToken.burn(address(this), oldTokenIds[i], 1);
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata oldTokenIds,
+        uint256[] calldata values,
+        bytes calldata data
+    ) external override returns (bytes4) {
+        require (msg.sender == address(oldToken), "invalid token contract");
+        for (uint256 i = 0; i < oldTokenIds.length; ++i) {
+            require (values[i] == 1);
             Token memory token = oldTokenIdMap[oldTokenIds[i]];
             require (token.id != 0, "invalid token id");
-            newToken._mint(msg.sender, token.id, token.tokenURI);
+            newToken._mint(operator, token.id, token.tokenURI);
         }
+        oldToken.safeBatchTransferFrom(address(this), BURN_ADDRESS, oldTokenIds, values, "");
+        return this.onERC1155BatchReceived.selector;
     }
 }
