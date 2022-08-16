@@ -12,7 +12,7 @@ def polygon():
 def mumbai_testnet():
     return _deploy(environment.mumbai, accounts[0], accounts[0])
 
-def _deploy(env, admin, upgrade_admin, publish=False):
+def _deploy(env, owner, proxy_admin, publish=False):
     old_token_ids = list(map(lambda t: t.old_token_id, env.tokens))
     token_uris = list(map(lambda t: t.uri, env.tokens))
     if (env.old_token):
@@ -25,9 +25,9 @@ def _deploy(env, admin, upgrade_admin, publish=False):
         oldToken,
         old_token_ids,
         token_uris,
-        admin,
+        owner,
         env.opensea_proxy,
-        upgrade_admin,
+        proxy_admin,
         publish
     )
     return oldToken, token, migrator
@@ -36,9 +36,9 @@ def token_with_migrator(
     old_token,
     old_token_ids,
     token_uris,
-    admin,
+    owner,
     opensea_proxy,
-    upgrade_admin,
+    proxy_admin,
     publish=False
 ):
     assert len(old_token_ids) == len(token_uris)
@@ -53,18 +53,18 @@ def token_with_migrator(
         {"from": accounts[0]},
         publish_source=publish
     )
-    token = poss_ports(admin, migrator_address, opensea_proxy, upgrade_admin, publish)
+    token = poss_ports(owner, migrator_address, opensea_proxy, proxy_admin, publish)
     return token, migrator
 
-def poss_ports(admin, minter, opensea_proxy, upgrade_admin, publish=False):
+def poss_ports(owner, minter, opensea_proxy, proxy_admin, publish=False):
     # Deploy logic contract
     print("Deploying PossPorts contract...")
     logic = PossPorts.deploy({"from": accounts[0]}, publish_source=publish)
     # Deploy and initialize proxy contract
-    initialize_call = logic.initialize.encode_input(admin, minter, opensea_proxy, DEFAULT_ROYALTY)
+    initialize_call = logic.initialize.encode_input(owner, minter, opensea_proxy, DEFAULT_ROYALTY)
     print("Deploying UpgradeableProxy contract...")
     proxy = UpgradeableProxy.deploy(
-        upgrade_admin,
+        proxy_admin,
         logic,
         initialize_call,
         {"from": accounts[0]},

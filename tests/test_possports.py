@@ -19,7 +19,7 @@ def isolation(fn_isolation):
 def test_set_default_royalty(token):
     tokenId = 1
     assert token.royaltyInfo(tokenId, 100) == (accounts[0], 10)
-    token.adminSetDefaultRoyalty(accounts[1], 2000, {"from": accounts[0]})
+    token.ownerSetDefaultRoyalty(accounts[1], 2000, {"from": accounts[0]})
     assert token.royaltyInfo(tokenId, 100) == (accounts[1], 20)
 
 def test_burn(token):
@@ -39,11 +39,11 @@ def test_burn_fail_if_not_token_owner(token):
 
 def test_token_uri_updates(token):
     tokenId = 1
-    token.adminSetBaseURI("", {"from": accounts[0]})
+    token.ownerSetBaseURI("", {"from": accounts[0]})
     token_uri = token.tokenURI(tokenId)
-    token.adminSetBaseURI("http://", {"from": accounts[0]})
+    token.ownerSetBaseURI("http://", {"from": accounts[0]})
     assert token.tokenURI(tokenId) == "http://" + token_uri
-    token.adminSetBaseEndURI("/end", {"from": accounts[0]})
+    token.ownerSetBaseEndURI("/end", {"from": accounts[0]})
     assert token.tokenURI(tokenId) == "http://" + token_uri + "/end"
 
 def test_owner_of_batch(token):

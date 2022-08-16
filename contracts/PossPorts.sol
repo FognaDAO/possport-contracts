@@ -37,15 +37,15 @@ contract PossPorts is
     * Should be called in the proxy contract right after instantiation.
      */
     function initialize(
-        address admin,
+        address owner,
         address _minter,
         address _openseaProxy,
         uint96 royalty
     ) external initializer {
         __ERC721_init("PossPorts", "POSSUM");
         _initializeEIP712("PossPorts");
-        _transferOwnership(admin);
-        _setDefaultRoyalty(admin, royalty);
+        _transferOwnership(owner);
+        _setDefaultRoyalty(owner, royalty);
         baseURI = "ipfs://";
         minter = _minter;
         openseaProxy = _openseaProxy;
@@ -98,51 +98,51 @@ contract PossPorts is
     }
 
     /**
-     * @dev Admin can change default royalty information for all tokens.
+     * @dev Owner can change default royalty information for all tokens.
      */
-    function adminSetDefaultRoyalty(address receiver, uint96 feeNumerator) external onlyOwner {
+    function ownerSetDefaultRoyalty(address receiver, uint96 feeNumerator) external onlyOwner {
         _setDefaultRoyalty(receiver, feeNumerator);
     }
 
     /**
-     * @dev Admin can set the royalty information for a specific token.
+     * @dev Owner can set the royalty information for a specific token.
      */
-    function adminSetTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) external onlyOwner {
+    function ownerSetTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) external onlyOwner {
         _setTokenRoyalty(tokenId, receiver, feeNumerator);
     }
 
     /**
-     * @dev Admin can remove default royalty information.
+     * @dev Owner can remove default royalty information.
      */
-    function adminDeleteDefaultRoyalty() external onlyOwner {
+    function ownerDeleteDefaultRoyalty() external onlyOwner {
         _deleteDefaultRoyalty();
     }
 
     /**
-     * @dev Admin can reset royalty information for a token back to the global default.
+     * @dev Owner can reset royalty information for a token back to the global default.
      */
-    function adminResetTokenRoyalty(uint256 tokenId) external onlyOwner {
+    function ownerResetTokenRoyalty(uint256 tokenId) external onlyOwner {
         _resetTokenRoyalty(tokenId);
     }
 
     /**
-     * @dev Admin can change token URI.
+     * @dev Owner can change token URI.
      */
-    function adminSetTokenURI(uint256 tokenId, string calldata newTokenURI) external onlyOwner {
+    function ownerSetTokenURI(uint256 tokenId, string calldata newTokenURI) external onlyOwner {
         _setTokenURI(tokenId, newTokenURI);
     }
 
     /**
-     * @dev Admin can change base URI.
+     * @dev Owner can change base URI.
      */
-    function adminSetBaseURI(string calldata newBaseURI) external onlyOwner {
+    function ownerSetBaseURI(string calldata newBaseURI) external onlyOwner {
         baseURI = newBaseURI;
     }
 
     /**
-     * @dev Admin can change base end URI.
+     * @dev Owner can change base end URI.
      */
-    function adminSetBaseEndURI(string calldata newBaseEndURI) external onlyOwner {
+    function ownerSetBaseEndURI(string calldata newBaseEndURI) external onlyOwner {
         baseEndURI = newBaseEndURI;
     }
 
