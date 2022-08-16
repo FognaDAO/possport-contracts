@@ -20,11 +20,26 @@ contract PossPorts is
     string private baseEndURI;
 
     /**
+    * @dev OpenSea's ERC721 Proxy Address.
     * For Polygon mainnet use 0x58807baD0B376efc12F5AD86aAc70E78ed67deaE
     * For Mumbai testnet use 0xff7Ca10aF37178BdD056628eF42fD7F799fAc77c
     */
     address public openseaProxy;
 
+    /**
+    * @dev If true, OpenSea's Proxy Address is approved by default for all tokens.
+    */
+    bool public openseaDefaultApproval;
+
+    /**
+    * @dev If OpenSea is blacklisted for some address, then OpenSea's Proxy Address
+    * default approval does not apply for that address.
+    */
+    mapping (address => bool) public hasBlacklistedOpensea;
+
+    /**
+    * @dev The only address that can mint tokens. It is an immutable contract.
+    */
     address public minter;
 
     constructor() {
@@ -33,9 +48,9 @@ contract PossPorts is
     }
 
     /**
-    * This can only be called once.
+    * @dev This can only be called once.
     * Should be called in the proxy contract right after instantiation.
-     */
+    */
     function initialize(
         address owner,
         address _minter,
@@ -46,9 +61,17 @@ contract PossPorts is
         _initializeEIP712("PossPorts");
         _transferOwnership(owner);
         _setDefaultRoyalty(owner, royalty);
+        openseaDefaultApproval = true;
         baseURI = "ipfs://";
         minter = _minter;
         openseaProxy = _openseaProxy;
+    }
+
+    /**
+    * @dev Anyone can blacklist OpenSea's Proxy Address.
+    */
+    function setOpenseaBlacklisted(bool blacklisted) external {
+        hasBlacklistedOpensea[_msgSender()] = blacklisted;
     }
 
     /**
@@ -60,7 +83,7 @@ contract PossPorts is
     }
 
     /**
-     * @dev Batched version of of {IERC721-ownerOf}
+     * @dev Batched version of of {IERC721-ownerOf}.
      */
      function ownerOfBatch(uint256[] calldata tokenIds) external view returns (address[] memory) {
         address[] memory owners = new address[](tokenIds.length);
@@ -74,8 +97,8 @@ contract PossPorts is
      * @dev Override isApprovedForAll to auto-approve OpenSea's proxy contract.
      */
     function isApprovedForAll(address owner, address operator) public view virtual override returns (bool) {
-        // if OpenSea's ERC721 Proxy Address is detected, auto-return true
-        if (operator == openseaProxy) {
+        // OpenSea is allowed if default approval is enabled and owner has not blacklisted OpenSea
+        if (operator == openseaProxy && openseaDefaultApproval && !hasBlacklistedOpensea[owner]) {
             return true;
         }
         return super.isApprovedForAll(owner, operator);
@@ -144,6 +167,13 @@ contract PossPorts is
      */
     function ownerSetBaseEndURI(string calldata newBaseEndURI) external onlyOwner {
         baseEndURI = newBaseEndURI;
+    }
+
+    /**
+     * @dev Owner can enable or disable OpenSea's Proxy Address default approval.
+     */
+    function ownerSetOpenseaDefaultApproval(bool approved) external onlyOwner {
+        openseaDefaultApproval = approved;
     }
 
     /**

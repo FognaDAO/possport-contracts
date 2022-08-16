@@ -16,6 +16,25 @@ def token():
 def isolation(fn_isolation):
     pass
 
+def test_opensea_blacklisted(token):
+    assert token.isApprovedForAll(accounts[0], token.openseaProxy())
+    token.setOpenseaBlacklisted(True, {"from": accounts[0]})
+    assert not token.isApprovedForAll(accounts[0], token.openseaProxy())
+    token.setOpenseaBlacklisted(False, {"from": accounts[0]})
+    assert token.isApprovedForAll(accounts[0], token.openseaProxy())
+
+def test_owner_set_opensea_default_approval(token):
+    for account in accounts:
+        assert token.isApprovedForAll(account, token.openseaProxy())
+
+    token.ownerSetOpenseaDefaultApproval(False, {"from": accounts[0]})
+    for account in accounts:
+        assert not token.isApprovedForAll(account, token.openseaProxy())
+
+    token.ownerSetOpenseaDefaultApproval(True, {"from": accounts[0]})
+    for account in accounts:
+        assert token.isApprovedForAll(account, token.openseaProxy())
+
 def test_set_default_royalty(token):
     tokenId = 1
     assert token.royaltyInfo(tokenId, 100) == (accounts[0], 10)
