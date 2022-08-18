@@ -1,7 +1,7 @@
 {
   "name": "No Good With Words",
   "description": "Sewer Nation community ID\nPossPort #24\nPossum Name: QUIET\nI'm terrified to even acknowledge the absence of dread.",
-  "image_url": "ipfs://bafybeichgtxvskuvg73qnltrwlqtt2zg6rns7o6d6yoci3vj6bqgionzgq",
+  "image_url": "ipfs://QmajkC624LFQi3MACqvt88RgGavs6ryfcLJeNGgZGwhYac",
   "properties": [
     {
       "trait_type": "Existential Dread",
@@ -9,5 +9,6 @@
       "display_type": "number",
       "max_value": 10
     }
-  ]
+  ],
+  "image": "ipfs://bafybeic2zgcflw5kmaic4lqhjbpsri3dkfffh3wbuwglsjjdhbdp2ec3ty"
 }
