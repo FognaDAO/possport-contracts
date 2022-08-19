@@ -6,7 +6,8 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Receiver.sol";
 
 interface NewToken {
-    function _mint(address to, uint256 tokenId, string memory tokenURI) external;
+    function _mint(address to, uint256 tokenId, string calldata tokenURI) external;
+    function _mintBatch(address to, uint256[] calldata tokenIds, string[] calldata tokenURIs) external;
 }
 
 contract TokenMigrator is ERC1155Receiver {
@@ -79,12 +80,16 @@ contract TokenMigrator is ERC1155Receiver {
         bytes calldata data
     ) external override returns (bytes4) {
         require (msg.sender == address(oldToken), "invalid token contract");
+        uint256[] memory newTokenIds = new uint256[](oldTokenIds.length);
+        string[] memory newTokenURIs = new string[](oldTokenIds.length);
         for (uint256 i = 0; i < oldTokenIds.length; ++i) {
             require (values[i] == 1);
             Token memory token = oldTokenIdMap[oldTokenIds[i]];
             require (token.id != 0, "invalid token id");
-            newToken._mint(operator, token.id, token.tokenURI);
+            newTokenIds[i] = token.id;
+            newTokenURIs[i] = token.tokenURI;
         }
+        newToken._mintBatch(operator, newTokenIds, newTokenURIs);
         oldToken.safeBatchTransferFrom(address(this), BURN_ADDRESS, oldTokenIds, values, "");
         return this.onERC1155BatchReceived.selector;
     }

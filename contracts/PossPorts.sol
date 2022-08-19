@@ -179,10 +179,22 @@ contract PossPorts is
     /**
      * @dev Only minter is able to mint new tokens.
      */
-    function _mint(address to, uint256 tokenId, string memory _tokenURI) external {
-        require (_msgSender() == minter);
+    function _mint(address to, uint256 tokenId, string calldata _tokenURI) external {
+        require (_msgSender() == minter, "caller is not the minter");
         _mint(to, tokenId);
         _setTokenURI(tokenId, _tokenURI);
+    }
+
+    /**
+     * @dev Minter can mint multiple tokens in one transaction.
+     */
+    function _mintBatch(address to, uint256[] calldata tokenIds, string[] calldata tokenURIs) external {
+        require (_msgSender() == minter, "caller is not the minter");
+        require(tokenIds.length == tokenURIs.length);
+        for (uint256 i = 0; i < tokenIds.length; ++i) {
+            _mint(to, tokenIds[i]);
+            _setTokenURI(tokenIds[i], tokenURIs[i]);
+        }
     }
 
     /**
