@@ -15,14 +15,21 @@ contract UpgradeableProxy is ERC1967Proxy {
     }
 
     /**
-     * See {ERC1967Proxy-_getAdmin}.
+     * @dev Returns the current implementation address.
+     */
+    function getImplementation() external view returns (address) {
+        return _implementation();
+    }
+
+    /**
+     * See {ERC1967Upgrade-_getAdmin}.
      */
     function getAdmin() external view returns (address) {
         return _getAdmin();
     }
 
     /**
-     * See {ERC1967Proxy-_upgradeToAndCall}.
+     * See {ERC1967Upgrade-_upgradeToAndCall}.
      */
     function upgradeToAndCall(
         address newImplementation,
@@ -34,7 +41,7 @@ contract UpgradeableProxy is ERC1967Proxy {
     }
 
     /**
-     * See {ERC1967Proxy-_changeAdmin}.
+     * See {ERC1967Upgrade-_changeAdmin}.
      */
     function changeAdmin(address newAdmin) external {
         require(_getAdmin() == msg.sender, "caller is not admin");
