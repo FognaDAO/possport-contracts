@@ -14,14 +14,9 @@ RUN pip install -r requirements.txt
 
 WORKDIR /possums
 
-# install compiler before importing sources
-COPY install_compiler.py install_compiler.py
-RUN python3 install_compiler.py
-
-# install npm dependencies
-COPY package.json package.json
-COPY package-lock.json package-lock.json
-RUN npm install
+# install dependencies before importing sources
+RUN brownie pm install OpenZeppelin/openzeppelin-contracts@4.7.3
+RUN brownie pm install OpenZeppelin/openzeppelin-contracts-upgradeable@4.7.3
 
 COPY brownie-config.yaml brownie-config.yaml
 COPY scripts scripts
