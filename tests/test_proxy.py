@@ -28,7 +28,7 @@ def test_upgrade(deployment):
     assert token.newValue() == new_value
     assert token.baseURI() == "ipfs://"
     assert not token.baseEndURI()
-    assert token.tokenURI(1) == "bafkreibbhwpf3wwooe7x2zz555ihmolbhtoq4pbuxsfuhi65z5zt4ibcnu"
+    assert token.tokenURI(1) == "bafkreiadflw5nc747gf2vxn6sw5kkit5mef7sn4agx6pdhfmn7c6ahlfmy"
     assert token.openseaProxy() == "0x58807baD0B376efc12F5AD86aAc70E78ed67deaE"
     assert token.balanceOf(accounts[0]) == 50
     tokenId = 1
