@@ -156,6 +156,16 @@ contract PossPorts is
     }
 
     /**
+     * @dev Batched version of {ownerSetTokenURI}.
+     */
+    function ownerBatchSetTokenURIs(uint256[] calldata tokenIds, string[] calldata newTokenURIs) external onlyOwner {
+        require(tokenIds.length == newTokenURIs.length);
+        for (uint256 i = 0; i < tokenIds.length; ++i) {
+            _setTokenURI(tokenIds[i], newTokenURIs[i]);
+        }
+    }
+
+    /**
      * @dev Owner can change base URI.
      */
     function ownerSetBaseURI(string calldata newBaseURI) external onlyOwner {

@@ -65,6 +65,13 @@ def test_token_uri_updates(token):
     token.ownerSetBaseEndURI("/end", {"from": accounts[0]})
     assert token.tokenURI(tokenId) == "http://" + token_uri + "/end"
 
+def test_token_tokens_uris_batch_updates(token):
+    tokenIds = [1, 2, 3]
+    token_uris = ["one", "two", "three"]
+    token.ownerBatchSetTokenURIs(tokenIds, token_uris, {"from": accounts[0]})
+    for i in range(len(tokenIds)):
+        assert token.tokenURI(tokenIds[i]) == "ipfs://" + token_uris[i]
+
 def test_owner_of_batch(token):
     token.transferFrom(accounts[0], accounts[1], 2, {"from": accounts[0]})
     assert token.ownerOfBatch([1, 2, 3]) == [accounts[0], accounts[1], accounts[0]]
