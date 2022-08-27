@@ -29,6 +29,14 @@ contract UpgradeableProxy is ERC1967Proxy {
     }
 
     /**
+     * See {ERC1967Upgrade-_upgradeTo}.
+     */
+    function upgradeTo(address newImplementation) external {
+        require(_getAdmin() == msg.sender, "caller is not admin");
+        _upgradeTo(newImplementation);
+    }
+
+    /**
      * See {ERC1967Upgrade-_upgradeToAndCall}.
      */
     function upgradeToAndCall(
