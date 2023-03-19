@@ -1,4 +1,5 @@
-from brownie import PossPorts, UpgradeableProxy, TokenMigrator, FakeToken, Contract, web3, convert, accounts
+from brownie import PossPorts, ContractFactory, SewerActivitiesLogic, TokenMigrator
+from brownie import UpgradeableProxy, FakeToken, Contract, web3, convert, accounts
 from scripts import environment
 
 DEFAULT_ROYALTY = 1000
@@ -72,6 +73,12 @@ def poss_ports(owner, minter, opensea_proxy, proxy_admin, publish=False):
     )
     token = Contract.from_abi("PossPorts", proxy.address, PossPorts.abi + UpgradeableProxy.abi)
     return token
+
+def activities_factory(admin):
+  logic = SewerActivitiesLogic.deploy({"from": accounts[0]})
+  initialize_call = logic.initialize.encode_input(accounts[0], accounts[0], accounts[0], "http://ProvaYoYo")
+  factory = ContractFactory.deploy(admin, logic, initialize_call, {"from": accounts[0]})
+  return factory
 
 def fake_old_token(tokenIds, publish=False):
     oldToken = FakeToken.deploy({"from": accounts[0]}, publish_source=publish)
