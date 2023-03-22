@@ -51,7 +51,7 @@ docker run -it possums
 If you don't like *Docker*, you can install development dependencies manually.
 
 * [python3](https://www.python.org/downloads/release/python-368/) - tested with version 3.8.10
-* [brownie](https://github.com/iamdefinitelyahuman/brownie) - tested with version 1.18.1
+* [brownie](https://github.com/iamdefinitelyahuman/brownie) - tested with version 1.19.3
 * [ganache-cli](https://github.com/trufflesuite/ganache-cli) - tested with version 6.12.2
 
 We describe how to install development dependencies on Ubuntu 20.04, the same steps might apply to other operating systems.
@@ -75,7 +75,7 @@ nvm install --lts=Gallium
 npm install ganache-cli@6.12.2 --global
 
 # install brownie
-pipx install eth-brownie==1.18.1
+pipx install eth-brownie==1.19.3
 ```
 
 ### Interacting with contracts
