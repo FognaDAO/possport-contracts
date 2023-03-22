@@ -7,8 +7,8 @@ from brownie import SewerActivitiesLogic, accounts, reverts, web3
 def token():
     factory = deploy.activities_factory(accounts[0])
     token = SewerActivitiesLogic.at(factory.currentContract())
-    tokenData1 = ("name1", "description1", "http://my-image.com", 1, 2, 3, 4)
-    tokenData2 = ("name2", "description2", "", 4, 3, 2, 1)
+    tokenData1 = ("name1", "description1", "http://my-image.com", (1, 2, 3, 4))
+    tokenData2 = ("name2", "description2", "", (4, 3, 2, 1))
     token.createAndMint(accounts[0], tokenData1, {"from": accounts[0]})
     token.createAndMint(accounts[0], tokenData2, {"from": accounts[0]})
     yield token
@@ -31,14 +31,14 @@ def test_mint_to_many(token):
 
 def test_create_and_mint(token):
     tokenId = 3
-    tokenData = ("name3", "description3", "http://image-3.com", 3, 3, 3, 3)
+    tokenData = ("name3", "description3", "http://image-3.com", (3, 3, 3, 3))
     token.createAndMint(accounts[1], tokenData, {"from": accounts[0]})
     assert token.balanceOf(accounts[1], tokenId) == 1
     assert token.uri(tokenId) == "data:application/json;base64,eyJuYW1lIjoibmFtZTMiLCJkZXNjcmlwdGlvbiI6ImRlc2NyaXB0aW9uMyIsImltYWdlIjoiaHR0cDovL2ltYWdlLTMuY29tIiwicHJvcGVydGllcyI6eyJjb21tdW5pdHlfcG9pbnRzIjozLCJtYXJrZXRpbmdfcG9pbnRzIjozLCJ0cmVhc3VyeV9wb2ludHMiOjMsInByb2dyYW1taW5nX3BvaW50cyI6M319"
 
 def test_create_and_mint_to_many(token):
     tokenId = 3
-    tokenData = ("name3", "description3", "http://image-3.com", 3, 3, 3, 3)
+    tokenData = ("name3", "description3", "http://image-3.com", (3, 3, 3, 3))
     token.createAndMintToMany([accounts[1], accounts[2]], tokenData, {"from": accounts[0]})
     assert token.balanceOfBatch([accounts[1], accounts[2]], [tokenId, tokenId]) == [1, 1]
     assert token.tokenData(tokenId) == tokenData

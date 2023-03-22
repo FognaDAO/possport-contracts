@@ -11,20 +11,20 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "./ERC1155Soulbound.sol";
 
-contract SewerActivitiesLogic is
-    ERC1155Soulbound,
-    AccessControl,
-    Initializable,
-    IERC1155MetadataURI
-{
+contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable, IERC1155MetadataURI {
+
+    struct Points {
+        uint32 community;
+        uint32 marketing;
+        uint32 treasury;
+        uint32 programming;
+    }
+
     struct TokenData {
         string name;
         string description;
         string imageURI;
-        uint32 communityPoints;
-        uint32 marketingPoints;
-        uint32 treasuryPoints;
-        uint32 programmingPoints;
+        Points points;
     }
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -33,10 +33,16 @@ contract SewerActivitiesLogic is
 
     bytes32 public constant SOCIAL_RECOVERY_ROLE = keccak256("SOCIAL_RECOVERY_ROLE");
 
+
     mapping(uint256 => TokenData) public tokenData;
 
     /**
-     * @dev When contract is stopped no more tokens can be minted
+     * @dev Total points for each account.
+     */
+    mapping(address => Points) public points;
+
+    /**
+     * @dev When contract is stopped no more tokens can be minted.
      */
     bool public stopped;
 
@@ -87,10 +93,10 @@ contract SewerActivitiesLogic is
             '{"name":"', data.name,
             '","description":"', data.description,
             '","image":"', bytes(data.imageURI).length > 0 ? data.imageURI : defaultTokenImage,
-            '","properties":{"community_points":', Strings.toString(data.communityPoints),
-            ',"marketing_points":', Strings.toString(data.marketingPoints),
-            ',"treasury_points":', Strings.toString(data.treasuryPoints),
-            ',"programming_points":', Strings.toString(data.programmingPoints),
+            '","properties":{"community_points":', Strings.toString(data.points.community),
+            ',"marketing_points":', Strings.toString(data.points.marketing),
+            ',"treasury_points":', Strings.toString(data.points.treasury),
+            ',"programming_points":', Strings.toString(data.points.programming),
             "}}"
         );
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(dataURI)));
@@ -111,7 +117,7 @@ contract SewerActivitiesLogic is
     }
 
     /**
-     * @dev Soulbound tokens can only be transfered for social recovery..
+     * @dev Soulbound tokens can only be transfered for social recovery.
      * See {IERC1155-safeBatchTransferFrom}.
      */
     function safeBatchTransferFrom(
@@ -120,8 +126,73 @@ contract SewerActivitiesLogic is
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public virtual override(ERC1155Soulbound, IERC1155) onlyRole(SOCIAL_RECOVERY_ROLE) {
+    ) public override(ERC1155Soulbound, IERC1155) onlyRole(SOCIAL_RECOVERY_ROLE) {
         _safeBatchTransferFrom(from, to, ids, amounts, data);
+    }
+
+    /**
+     * @dev Hook that is called before any token transfer. If it happens
+     * that a token is transfered from one address to an other,
+     * then the total user points must be updated accordingly.
+     */
+    function _afterTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal override {
+        Points memory totalPoints = Points(0, 0, 0, 0);
+        for (uint256 i = 0; i < ids.length; ++i) {
+            Points memory tokenPoints = tokenData[ids[i]].points;
+            uint32 amount = uint32(amounts[i]);
+            totalPoints.community += tokenPoints.community * amount;
+            totalPoints.marketing += tokenPoints.marketing * amount;
+            totalPoints.treasury += tokenPoints.treasury * amount;
+            totalPoints.programming += tokenPoints.programming * amount;
+        }
+        if (from != address(0)) {
+            Points storage fromPoints = points[from];
+            fromPoints.community -= totalPoints.community;
+            fromPoints.marketing -= totalPoints.marketing;
+            fromPoints.treasury -= totalPoints.treasury;
+            fromPoints.programming -= totalPoints.programming;
+        }
+
+        Points storage toPoints = points[to];
+        toPoints.community += totalPoints.community;
+        toPoints.marketing += totalPoints.marketing;
+        toPoints.treasury += totalPoints.treasury;
+        toPoints.programming += totalPoints.programming;
+    }
+
+    /**
+     * @dev Returns the amount of community points owned by `account`.
+     */
+    function communityPoints(address account) external view returns (uint32) {
+        return points[account].community;
+    }
+
+    /**
+     * @dev Returns the amount of marketing points owned by `account`.
+     */
+    function marketingPoints(address account) external view returns (uint32) {
+        return points[account].marketing;
+    }
+
+    /**
+     * @dev Returns the amount of treasury points owned by `account`.
+     */
+    function treasuryPoints(address account) external view returns (uint32) {
+        return points[account].treasury;
+    }
+
+    /**
+     * @dev Returns the amount of programming points owned by `account`.
+     */
+    function programmingPoints(address account) external view returns (uint32) {
+        return points[account].programming;
     }
 
     /**
