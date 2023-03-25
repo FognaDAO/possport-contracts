@@ -34,7 +34,7 @@ def test_create_and_mint(token):
     tokenData = ("name3", "description3", "http://image-3.com", (3, 3, 3, 3))
     token.createAndMint(accounts[1], tokenData, {"from": accounts[0]})
     assert token.balanceOf(accounts[1], tokenId) == 1
-    assert token.uri(tokenId) == "data:application/json;base64,eyJuYW1lIjoibmFtZTMiLCJkZXNjcmlwdGlvbiI6ImRlc2NyaXB0aW9uMyIsImltYWdlIjoiaHR0cDovL2ltYWdlLTMuY29tIiwicHJvcGVydGllcyI6eyJjb21tdW5pdHlfcG9pbnRzIjozLCJtYXJrZXRpbmdfcG9pbnRzIjozLCJ0cmVhc3VyeV9wb2ludHMiOjMsInByb2dyYW1taW5nX3BvaW50cyI6M319"
+    assert token.uri(tokenId) == "data:application/json;base64,eyJuYW1lIjoibmFtZTMiLCJkZXNjcmlwdGlvbiI6ImRlc2NyaXB0aW9uMyIsImltYWdlIjoiaHR0cDovL2ltYWdlLTMuY29tImF0dHJpYnV0ZXMiOlt7ImRpc3BsYXlfdHlwZSI6Im51bWJlciIsInRyYWl0X3R5cGUiOiJDb21tdW5pdHkgUG9pbnRzIiwidmFsdWUiOiIzIn0seyJkaXNwbGF5X3R5cGUiOiJudW1iZXIiLCJ0cmFpdF90eXBlIjoiTWFya2V0aW5nIFBvaW50cyIsInZhbHVlIjoiMyJ9LHsiZGlzcGxheV90eXBlIjoibnVtYmVyIiwidHJhaXRfdHlwZSI6IlRyZWFzdXJ5IFBvaW50cyIsInZhbHVlIjoiMyJ9LHsiZGlzcGxheV90eXBlIjoibnVtYmVyIiwidHJhaXRfdHlwZSI6IlByb2dyYW1taW5nIFBvaW50cyIsInZhbHVlIjoiMyJ9XX0="
 
 def test_create_and_mint_to_many(token):
     tokenId = 3

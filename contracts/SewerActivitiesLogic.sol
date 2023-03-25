@@ -93,11 +93,11 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
             '{"name":"', data.name,
             '","description":"', data.description,
             '","image":"', bytes(data.imageURI).length > 0 ? data.imageURI : defaultTokenImage,
-            '","properties":{"community_points":', Strings.toString(data.points.community),
-            ',"marketing_points":', Strings.toString(data.points.marketing),
-            ',"treasury_points":', Strings.toString(data.points.treasury),
-            ',"programming_points":', Strings.toString(data.points.programming),
-            "}}"
+            '","attributes":[{"display_type":"number","trait_type":"Community Points","value":"', Strings.toString(data.points.community),
+            '"},{"display_type":"number","trait_type":"Marketing Points","value":"', Strings.toString(data.points.marketing),
+            '"},{"display_type":"number","trait_type":"Treasury Points","value":"', Strings.toString(data.points.treasury),
+            '"},{"display_type":"number","trait_type":"Programming Points","value":"', Strings.toString(data.points.programming),
+            '"}]}'
         );
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(dataURI)));
     }
