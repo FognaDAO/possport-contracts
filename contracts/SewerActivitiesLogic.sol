@@ -21,7 +21,6 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
     }
 
     struct TokenData {
-        string name;
         string description;
         string imageURI;
         Points points;
@@ -90,7 +89,7 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
     function uri(uint256 id) external view override returns (string memory) {
         TokenData memory data = tokenData[id];
         bytes memory dataURI = abi.encodePacked(
-            '{"name":"', data.name,
+            '{"name":"Sewer Activity #', Strings.toString(id),
             '","description":"', data.description,
             '","image":"', bytes(data.imageURI).length > 0 ? data.imageURI : defaultTokenImage,
             '","attributes":[{"display_type":"number","trait_type":"Community Points","value":"', Strings.toString(data.points.community),
@@ -227,6 +226,36 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
     }
 
     /**
+     * @dev Destroys `amount` tokens of token type `id` from `from`.
+     * Only minters can call this function.
+     */
+    function burn(address from, uint256 tokenId, uint256 amount) external {
+        _requireNotStopped();
+        require(
+            from == _msgSender() || hasRole(MINTER_ROLE, _msgSender()),
+            "Caller is not owner nor minter"
+        );
+        _burn(from, tokenId, amount);
+    }
+
+    /**
+     * @dev Batched version of {burn}.
+     * Only minters can call this function.
+     */
+    function burnBatch(
+        address from,
+        uint256[] memory tokenIds,
+        uint256[] memory amounts
+    ) external {
+        _requireNotStopped();
+        require(
+            from == _msgSender() || hasRole(MINTER_ROLE, _msgSender()),
+            "Caller is not owner nor minter"
+        );
+        _burnBatch(from, tokenIds, amounts);
+    }
+
+    /**
      * @dev Creates a new token and mints it to multiple addresses.
      * Only minters can call this function.
      */
@@ -238,7 +267,7 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
     }
 
     /**
-     * Stops the contract. This can not be undone. Social recovery is still available after stop,
+     * @dev Stops the contract. This can not be undone. Social recovery is still available after stop,
      * but no more tokens can be created or minted.
      */
     function stop() external onlyRole(TERMINATOR_ROLE) {
@@ -260,7 +289,6 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
      * Private function without access restriction.
      */
     function _create(uint256 id, TokenData calldata data) private {
-        require(bytes(data.name).length > 0, "Empty name");
         tokenData[id] = data;
     }
 
@@ -268,7 +296,7 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
      * @dev True if a token with this id has been created.
      */
     function _exists(uint256 tokenId) private view returns (bool) {
-        return bytes(tokenData[tokenId].name).length > 0;
+        return tokenId > 0 && tokenId < tokenIdCounter;
     }
 
     /**

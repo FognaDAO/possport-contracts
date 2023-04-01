@@ -7,9 +7,9 @@ from brownie import SewerActivitiesLogic, accounts, reverts, web3
 def token():
     factory = deploy.activities_factory(accounts[0])
     token = SewerActivitiesLogic.at(factory.currentContract())
-    tokenData1 = ("name1", "description1", "http://my-image.com", (1, 2, 3, 4))
-    tokenData2 = ("name2", "description2", "", (2, 3, 4, 5))
-    tokenData3 = ("name3", "description3", "", (3, 4, 5, 6))
+    tokenData1 = ("description1", "http://my-image.com", (1, 2, 3, 4))
+    tokenData2 = ("description2", "", (2, 3, 4, 5))
+    tokenData3 = ("description3", "", (3, 4, 5, 6))
     token.createAndMint(accounts[0], tokenData1, {"from": accounts[0]})
     token.createAndMint(accounts[0], tokenData2, {"from": accounts[0]})
     token.createAndMint(accounts[1], tokenData3, {"from": accounts[0]})
@@ -39,16 +39,16 @@ def test_mint_to_many(token):
 
 def test_create_and_mint(token):
     tokenId = 4
-    tokenData = ("name3", "description3", "http://image-3.com", (3, 3, 3, 3))
+    tokenData = ("description4", "http://image-4.com", (3, 3, 3, 3))
     assert token.points(accounts[1]) == (3, 4, 5, 6)
     token.createAndMint(accounts[1], tokenData, {"from": accounts[0]})
     assert token.balanceOf(accounts[1], tokenId) == 1
-    assert token.uri(tokenId) == "data:application/json;base64,eyJuYW1lIjoibmFtZTMiLCJkZXNjcmlwdGlvbiI6ImRlc2NyaXB0aW9uMyIsImltYWdlIjoiaHR0cDovL2ltYWdlLTMuY29tImF0dHJpYnV0ZXMiOlt7ImRpc3BsYXlfdHlwZSI6Im51bWJlciIsInRyYWl0X3R5cGUiOiJDb21tdW5pdHkgUG9pbnRzIiwidmFsdWUiOiIzIn0seyJkaXNwbGF5X3R5cGUiOiJudW1iZXIiLCJ0cmFpdF90eXBlIjoiTWFya2V0aW5nIFBvaW50cyIsInZhbHVlIjoiMyJ9LHsiZGlzcGxheV90eXBlIjoibnVtYmVyIiwidHJhaXRfdHlwZSI6IlRyZWFzdXJ5IFBvaW50cyIsInZhbHVlIjoiMyJ9LHsiZGlzcGxheV90eXBlIjoibnVtYmVyIiwidHJhaXRfdHlwZSI6IlByb2dyYW1taW5nIFBvaW50cyIsInZhbHVlIjoiMyJ9XX0="
+    assert token.uri(tokenId) == "data:application/json;base64,eyJuYW1lIjoiU2V3ZXIgQWN0aXZpdHkgIzQiLCJkZXNjcmlwdGlvbiI6ImRlc2NyaXB0aW9uNCIsImltYWdlIjoiaHR0cDovL2ltYWdlLTQuY29tIiwiYXR0cmlidXRlcyI6W3siZGlzcGxheV90eXBlIjoibnVtYmVyIiwidHJhaXRfdHlwZSI6IkNvbW11bml0eSBQb2ludHMiLCJ2YWx1ZSI6IjMifSx7ImRpc3BsYXlfdHlwZSI6Im51bWJlciIsInRyYWl0X3R5cGUiOiJNYXJrZXRpbmcgUG9pbnRzIiwidmFsdWUiOiIzIn0seyJkaXNwbGF5X3R5cGUiOiJudW1iZXIiLCJ0cmFpdF90eXBlIjoiVHJlYXN1cnkgUG9pbnRzIiwidmFsdWUiOiIzIn0seyJkaXNwbGF5X3R5cGUiOiJudW1iZXIiLCJ0cmFpdF90eXBlIjoiUHJvZ3JhbW1pbmcgUG9pbnRzIiwidmFsdWUiOiIzIn1dfQ=="
     assert token.points(accounts[1]) == (6, 7, 8, 9)
 
 def test_create_and_mint_to_many(token):
     tokenId = 4
-    tokenData = ("name4", "description4", "http://image-4.com", (3, 3, 3, 3))
+    tokenData = ("description4", "http://image-4.com", (3, 3, 3, 3))
     assert token.points(accounts[1]) == (3, 4, 5, 6)
     assert token.points(accounts[2]) == (0, 0, 0, 0)
     token.createAndMintToMany([accounts[1], accounts[2]], tokenData, {"from": accounts[0]})
