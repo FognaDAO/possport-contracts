@@ -10,8 +10,14 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "./ERC1155Soulbound.sol";
+import "./OwnableLight.sol";
 
-contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable, IERC1155MetadataURI {
+contract SewerActivitiesLogic is
+    ERC1155Soulbound,
+    AccessControl,
+    OwnableLight,
+    Initializable,
+    IERC1155MetadataURI {
 
     struct Points {
         uint32 community;
@@ -272,6 +278,16 @@ contract SewerActivitiesLogic is ERC1155Soulbound, AccessControl, Initializable,
      */
     function stop() external onlyRole(TERMINATOR_ROLE) {
         stopped = true;
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Owner of the contract is allowed to edit collection settings such as logo
+     * and description inside OpenSea's marketplace.
+     * Only admins can call this function.
+     */
+    function transferOwnership(address newOwner) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _transferOwnership(newOwner);
     }
 
     /**

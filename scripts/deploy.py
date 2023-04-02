@@ -75,10 +75,10 @@ def poss_ports(owner, minter, opensea_proxy, proxy_admin, publish=False):
     return token
 
 def activities_factory(admin):
-  logic = SewerActivitiesLogic.deploy({"from": accounts[0]})
-  initialize_call = logic.initialize.encode_input(accounts[0], accounts[0], accounts[0], "ipfs://bafybeigotjnmcoixfgov5622t7z5biyike2whe6td62lyokp2htchbyb2e")
-  factory = ContractFactory.deploy(admin, logic, initialize_call, {"from": accounts[0]})
-  return factory
+    logic = SewerActivitiesLogic.deploy({"from": accounts[0]})
+    initialize_call = logic.initialize.encode_input(accounts[0], accounts[0], accounts[0], "ipfs://bafybeigotjnmcoixfgov5622t7z5biyike2whe6td62lyokp2htchbyb2e")
+    factory = ContractFactory.deploy(admin, logic, initialize_call, {"from": accounts[0]})
+    return factory
 
 def fake_old_token(tokenIds, publish=False):
     oldToken = FakeToken.deploy({"from": accounts[0]}, publish_source=publish)
