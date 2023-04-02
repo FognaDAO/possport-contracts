@@ -15,8 +15,8 @@ RUN pip install -r requirements.txt
 WORKDIR /possums
 
 # install dependencies before importing sources
-RUN brownie pm install OpenZeppelin/openzeppelin-contracts@4.7.3
-RUN brownie pm install OpenZeppelin/openzeppelin-contracts-upgradeable@4.7.3
+RUN brownie pm install OpenZeppelin/openzeppelin-contracts@4.8.2
+RUN brownie pm install OpenZeppelin/openzeppelin-contracts-upgradeable@4.8.2
 
 COPY brownie-config.yaml brownie-config.yaml
 COPY scripts scripts
