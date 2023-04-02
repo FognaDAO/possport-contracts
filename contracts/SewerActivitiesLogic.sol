@@ -273,6 +273,15 @@ contract SewerActivitiesLogic is
     }
 
     /**
+     * @dev Updates the default image for tokens.
+     * Only minters can call this function.
+     */
+    function setDefaultTokenImage(string calldata tokenImage) external onlyRole(MINTER_ROLE) {
+        _requireNotStopped();
+        defaultTokenImage = tokenImage;
+    }
+
+    /**
      * @dev Stops the contract. This can not be undone. Social recovery is still available after stop,
      * but no more tokens can be created or minted.
      */
