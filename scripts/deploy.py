@@ -76,7 +76,7 @@ def poss_ports(owner, minter, opensea_proxy, proxy_admin, publish=False):
 
 def activities_factory(admin):
     logic = SewerActivitiesLogic.deploy({"from": accounts[0]})
-    initialize_call = logic.initialize.encode_input(accounts[0], accounts[0], accounts[0], "ipfs://bafybeigotjnmcoixfgov5622t7z5biyike2whe6td62lyokp2htchbyb2e")
+    initialize_call = logic.initialize.encode_input(accounts[0], accounts[0], accounts[0], accounts[0], "ipfs://bafybeigotjnmcoixfgov5622t7z5biyike2whe6td62lyokp2htchbyb2e")
     factory = ContractFactory.deploy(admin, logic, initialize_call, {"from": accounts[0]})
     return factory
 

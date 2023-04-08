@@ -69,6 +69,7 @@ contract SewerActivitiesLogic is
         address admin,
         address minter,
         address socialRecovery,
+        address owner,
         string calldata tokenImage
     ) external initializer {
         stopped = false;
@@ -76,6 +77,7 @@ contract SewerActivitiesLogic is
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(MINTER_ROLE, minter);
         _grantRole(SOCIAL_RECOVERY_ROLE, socialRecovery);
+        _transferOwnership(owner);
         _grantRole(TERMINATOR_ROLE, _msgSender());
     }
 
