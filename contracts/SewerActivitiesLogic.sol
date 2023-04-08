@@ -238,7 +238,6 @@ contract SewerActivitiesLogic is
      * Only minters can call this function.
      */
     function burn(address from, uint256 tokenId, uint256 amount) external {
-        _requireNotStopped();
         require(
             from == _msgSender() || hasRole(MINTER_ROLE, _msgSender()),
             "Caller is not owner nor minter"
@@ -255,7 +254,6 @@ contract SewerActivitiesLogic is
         uint256[] memory tokenIds,
         uint256[] memory amounts
     ) external {
-        _requireNotStopped();
         require(
             from == _msgSender() || hasRole(MINTER_ROLE, _msgSender()),
             "Caller is not owner nor minter"
