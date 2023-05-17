@@ -6,16 +6,14 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Royalt
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
+import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 import "./OwnableLight.sol";
 import "./interfaces/IContractFactory.sol";
 import "./interfaces/ISewerActivities.sol";
 
 contract PossPorts is ERC721RoyaltyUpgradeable, AccessControlUpgradeable, PausableUpgradeable, OwnableLight {
-
-    struct TokenData {
-        string description;
-        string imageURI;
-    }
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
@@ -24,6 +22,12 @@ contract PossPorts is ERC721RoyaltyUpgradeable, AccessControlUpgradeable, Pausab
     bytes32 public constant ROYALTY_MANAGER_ROLE = keccak256("ROYALTY_MANAGER_ROLE");
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+
+    struct TokenData {
+        string name;
+        string description;
+        string imageURI;
+    }
 
     IContractFactory public activitiesFactory;
 
@@ -58,7 +62,8 @@ contract PossPorts is ERC721RoyaltyUpgradeable, AccessControlUpgradeable, Pausab
      * @dev See {IERC165-supportsInterface}.
      */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721RoyaltyUpgradeable, AccessControlUpgradeable) returns (bool) {
-        return ERC721RoyaltyUpgradeable.supportsInterface(interfaceId) || AccessControlUpgradeable.supportsInterface(interfaceId);
+        return ERC721RoyaltyUpgradeable.supportsInterface(interfaceId) ||
+            AccessControlUpgradeable.supportsInterface(interfaceId);
     }
 
     /**
@@ -77,16 +82,17 @@ contract PossPorts is ERC721RoyaltyUpgradeable, AccessControlUpgradeable, Pausab
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         address owner = ownerOf(tokenId);
         require (owner != address(0), "invalid token ID");
+        TokenData memory data = tokenData[tokenId];
         ISewerActivities activities = ISewerActivities(activitiesFactory.currentContract());
         Points memory points = activities.points(owner);
         bytes memory dataURI = abi.encodePacked(
-            '{"name":"Sewer Activity #', Strings.toString(id),
-            '","description":"', "",
-            '","image":"', bytes(data.imageURI).length > 0 ? data.imageURI : defaultTokenImage,
-            '","attributes":[{"display_type":"number","trait_type":"Community Points","value":"', Strings.toString(data.points.community),
-            '"},{"display_type":"number","trait_type":"Marketing Points","value":"', Strings.toString(data.points.marketing),
-            '"},{"display_type":"number","trait_type":"Treasury Points","value":"', Strings.toString(data.points.treasury),
-            '"},{"display_type":"number","trait_type":"Programming Points","value":"', Strings.toString(data.points.programming),
+            '{"name":"', data.name,
+            '","description":"', data.description,
+            '","image":"', data.imageURI,
+            '","attributes":[{"display_type":"boost_number","trait_type":"Community Points","value":"', Strings.toString(points.community),
+            '"},{"display_type":"boost_number","trait_type":"Marketing Points","value":"', Strings.toString(points.marketing),
+            '"},{"display_type":"boost_number","trait_type":"Treasury Points","value":"', Strings.toString(points.treasury),
+            '"},{"display_type":"boost_number","trait_type":"Programming Points","value":"', Strings.toString(points.programming),
             '"}]}'
         );
         return string(abi.encodePacked("data:application/json;base64,", Base64.encode(dataURI)));
@@ -133,19 +139,19 @@ contract PossPorts is ERC721RoyaltyUpgradeable, AccessControlUpgradeable, Pausab
     }
 
     /**
-     * @dev Owner can change token URI.
+     * @dev Minters can change token data.
      */
-    function setTokenImage(uint256 tokenId, string calldata uri) external onlyRole(MINTER_ROLE) {
-        tokenImages[tokenId] = uri;
+    function setTokenData(uint256 tokenId, TokenData calldata data) external onlyRole(MINTER_ROLE) {
+        _setTokenData(tokenId, data);
     }
 
     /**
      * @dev Batched version of {ownerSetTokenURI}.
      */
-    function batchSetTokenImages(uint256[] calldata tokenIds, string[] calldata uris) external onlyRole(MINTER_ROLE) {
-        require(tokenIds.length == uris.length);
+    function batchSetTokenData(uint256[] calldata tokenIds, TokenData[] calldata data) external onlyRole(MINTER_ROLE) {
+        require(tokenIds.length == data.length);
         for (uint256 i = 0; i < tokenIds.length; ++i) {
-            tokenImages[tokenIds[i]] = uris[i];
+            _setTokenData(tokenIds[i], data[i]);
         }
     }
 
@@ -157,21 +163,35 @@ contract PossPorts is ERC721RoyaltyUpgradeable, AccessControlUpgradeable, Pausab
     }
 
     /**
-     * @dev Only minter is able to mint new tokens.
+     * @dev This method is called by the migrator contract. The `_tokenURI` param was used in
+     * the prevoius version of this contract, now it is ignored.
      */
     function _mint(address to, uint256 tokenId, string calldata _tokenURI) external onlyRole(MINTER_ROLE) {
         _mint(to, tokenId);
-        //_setTokenURI(tokenId, _tokenURI);
     }
 
     /**
-     * @dev Minter can mint multiple tokens in one transaction.
+     * @dev This method is called by the migrator contract. The `_tokenURIs` param was used in
+     * the prevoius version of this contract, now it is ignored.
      */
     function _mintBatch(address to, uint256[] calldata tokenIds, string[] calldata tokenURIs) external onlyRole(MINTER_ROLE) {
-        require(tokenIds.length == tokenURIs.length);
         for (uint256 i = 0; i < tokenIds.length; ++i) {
             _mint(to, tokenIds[i]);
-            //_setTokenURI(tokenIds[i], tokenURIs[i]);
+        }
+    }
+
+    /**
+     * @dev Update token data. Internal function without access restriction.
+     */
+    function _setTokenData(uint256 tokenId, TokenData calldata data) internal {
+        if (bytes(data.name).length > 0) {
+            tokenData[tokenId].name = data.name;
+        }
+        if (bytes(data.description).length > 0) {
+            tokenData[tokenId].description = data.description;
+        }
+        if (bytes(data.imageURI).length > 0) {
+            tokenData[tokenId].imageURI = data.imageURI;
         }
     }
 }
