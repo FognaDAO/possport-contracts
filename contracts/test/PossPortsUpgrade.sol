@@ -9,8 +9,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URISto
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721RoyaltyUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/utils/ERC1155HolderUpgradeable.sol";
 
-import "../meta-transactions/ContextMixin.sol";
-import "../meta-transactions/NativeMetaTransaction.sol";
+import "../old/meta-transactions/ContextMixin.sol";
+import "../old/meta-transactions/NativeMetaTransaction.sol";
 
 contract PossPortsUpgrade is
     ERC721URIStorageUpgradeable,
